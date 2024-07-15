@@ -92,7 +92,6 @@ class WbPost(db.Model):
             db.session.commit()
 
 
-
 class Post(db.Model):
     __tablename__ = 'post'
     post_id = db.Column(db.Integer, primary_key=True)  # Добавляем столбец id
