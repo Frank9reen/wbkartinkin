@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+{% block title %}Создать новую карточку товара{% endblock %}
+
+{% block content %}
+
+
+            <div class="page-header">
+              <h3 class="page-title">
+                <span class="page-title-icon bg-gradient-primary text-white me-2">
+                  <i class="mdi mdi-cup"></i>
+                </span> Создать новую кружку с картинкой
+              </h3>
+              <nav aria-label="breadcrumb">
+                <ul class="breadcrumb">
+                  <li class="breadcrumb-item active" aria-current="page">
+                    <span></span>Обучение <i class="mdi mdi mdi-school icon-sm text-primary align-middle"></i>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+
+
+
+                <div class="row">
+                  <div class="col-md-7 grid-margin stretch-card">
+                    <div class="card">
+                      <div class="card-body"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                          <form action="/create_post" method="POST" enctype="multipart/form-data" id="postForm">
+                            <label for="title">Наименование</label><br>
+                            <input type="text" id="title" name="title" class="form-control" placeholder="Кружка с медведем" style="width: 300px;" maxlength="59" required oninput="checkLength('title', 59)" >
+                            <span id="titleCount" style="font-size: 12px;"></span><br><br>
+
+                            <label for="content">Описание</label><br>
+                            <textarea id="content" name="content" style="width: 300px; height: 100px;" maxlength="1500" class="form-control" placeholder="Удобная кружка с принтом медведь, играющий на балалайке на день рождения" oninput="checkLength('content', 1500)"></textarea>
+                            <span id="contentCount" style="font-size: 12px;"></span><br><br>
+
+                            {% if errors %}
+                                <ul style="color: red;" class="list-ticked">
+                                {% for error in errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                                </ul>
+                            {% endif %}
+
+                            <label for="file">Загрузите картинку исходник</label> <br>
+                            <input type="file" id="file" name="file" class="btn btn-outline-danger btn-icon-text" required >
+                            <div id="singlePreview"></div>
+                            <br>
+
+                            <label for="files">Загрузите 5 изображений картинки с товаром для карточки WB</label>  <br>
+                            <input type="file" id="files" name="files" class="btn btn-outline-danger btn-icon-text" multiple required>
+                            <div id="previews"></div><br>
+
+
+                            <div class="form-check">
+                                <label class="form-check-label">
+                                    <input type="checkbox" class="form-check-input" required>   Я подтверждаю, что исходный файл не нарушает авторских прав <i class="input-helper"></i></label>
+                            </div>
+
+                    <button type="submit" name="draft" value="true" class="btn btn-gradient-dark btn-fw">Сохранить как черновик</button><br><br>
+                    <button type="submit" name="moderation" value="true" class="btn btn-gradient-primary btn-fw">Отправить на модерацию</button>
+                </form>
+
+                  </div>
+                </div>
+              </div>
+
+                    <div class="col-md-5 grid-margin stretch-card">
+                    <div class="card">
+                      <div class="card-body"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+
+
+
+                                    <h4 class="card-title">Инструкция <i class="mdi mdi-alert-circle-outline icon-sm text-primary align-middle"></i></h4>
+                    <ul class="list-arrow">
+                        Заголовок
+                        <li>указывайте ключевые слова принта </li>
+                        <br>
+                        Описание
+                      <li>заполняйте более подробно</li>
+                        <br>
+                      Исходное изображение:
+                      <li>должно быть с высоким разрешением > 300dpi </li>
+                      <li>размерами 20 см на 30 см</li>
+                        <br>
+                        Мокапы
+                      <li>не более 5 штук</li>
+                        <li>размеры 700 на 900 пикселей</li>
+                        <li>не более 10 Мб для каждой картинки</li>
+                    </ul>
+
+
+                </div></div></div>
+
+
+            </div>
+
+
+
+
+
+
+
+ <style>
+    #titleCount, #contentCount {
+        font-size: 12px;
+    }
+</style>
+
+<script>
+    function checkLength(inputId, maxLength) {
+        const inputText = document.getElementById(inputId).value;
+        const countSpan = document.getElementById(`${inputId}Count`);
+
+        if (inputText.length > maxLength) {
+            countSpan.style.color = 'red';
+            countSpan.textContent = ` Слишком много символов, должно быть не более ${maxLength}.`;
+        } else {
+            countSpan.style.color = 'black';
+            countSpan.textContent = ` (Осталось символов: ${maxLength - inputText.length})`;
+        }
+    }
+</script>
+
+    <script>
+        function previewSingleImage() {
+            var preview = document.querySelector('#singlePreview');
+            var file = document.querySelector('input[type=file][name="file"]').files[0];
+
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var image = new Image();
+                    image.src = e.target.result;
+                    image.height = 100;
+                    image.title = file.name;
+                    preview.innerHTML = '';
+                    preview.appendChild(image);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function previewImages() {
+            var preview = document.querySelector('#previews');
+            var files = document.querySelector('input[type=file][name="files"]').files;
+            var filesArray = Array.from(files);
+
+            while (preview.firstChild) {
+                preview.removeChild(preview.firstChild);
+            }
+
+            function readAndPreview(file) {
+                var reader = new FileReader();
+
+                reader.addEventListener("load", function() {
+                    var image = new Image();
+                    image.height = 100;
+                    image.title = file.name;
+                    image.src = this.result;
+                    preview.appendChild(image);
+                });
+
+                if (file) {
+                    reader.readAsDataURL(file);
+                }
+            }
+
+            filesArray.forEach(function(file) {
+                readAndPreview(file);
+            });
+        }
+
+        document.querySelector('input[type=file][name="file"]').addEventListener("change", previewSingleImage);
+        document.querySelector('input[type=file][name="files"]').addEventListener("change", previewImages);
+    </script>
+{% endblock %}

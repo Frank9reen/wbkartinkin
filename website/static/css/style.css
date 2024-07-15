@@ -1,0 +1,47 @@
+/* Стили для тега <body> */
+body {
+    font-family: 'Roboto', Calibri, sans-serif;
+    font-family: Calibri, sans-serif;
+    size: 20;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+}
+
+/* Стили для заголовка <h1> */
+h1 {
+    color: #333;
+    font-size: 24px;
+    text-align: center;
+}
+
+/* Стили для параграфов <p> */
+p {
+    color: #666;
+    font-size: 16px;
+    line-height: 1.5;
+    text-align: left;
+}
+
+/* Стили для изображений */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+/* Стили для ссылок <a> */
+a {
+    color: #007bff; /* Синий цвет ссылок */
+    text-decoration: none; /* Убираем подчеркивание у ссылок */
+}
+
+a:hover {
+    text-decoration: underline; /* Подчеркиваем ссылку при наведении */
+}
+
+
+
+
+

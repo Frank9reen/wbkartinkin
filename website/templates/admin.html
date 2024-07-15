@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block title %}Дашборд{% endblock %}
+{% block h1text %}Dashboard{% endblock %}
+{% block content %}
+
+
+{% include 'static_page/dashboard-info.html' %}
+
+<div class="row">
+              <div class="col-12 grid-margin">
+                <div class="card">
+                  <div class="card-body">
+                    <h4>Карточки товаров с картинками</h4>
+                    <div class="table-responsive">
+
+
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Картинка</th>
+                                    <th>Карточка товара</th>
+                                    <th>Статус</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for post, image in posts_images %}
+                                    <tr>
+                                        <td>{{ post.post_id }}</td>
+                                        <td class="py-1"><img src="{{ url_for('static', filename=image.image_url) }}" ></td>
+                                        <td><a href="{{ url_for('kt.show_post', post_id=post.post_id) }}">{{ post.title }}</a></td>
+
+                                        <td>{% if post.post_status == 'на модерации' %}
+                                            <span class="badge badge-warning">{{ post.post_status }}</span>
+                                            {% elif post.post_status == 'отклонено' %}
+                                            <span class="badge badge-danger">отклонено</span>
+                                          {% elif post.post_status == 'опубликовано' %}
+                                            <span class="badge badge-success">опубликовано</span>
+                                           {% elif post.post_status == 'отклонено' %}
+                                            <span style="color: red;">{{ post.post_status }}</span>
+                                            {% elif post.post_status == 'черновик' %}
+                                            <span class="badge badge-grey">черновик</span>
+                                             {% elif post.post_status == 'заархивировано' %}
+                                            <span class="badge badge-black">заархивировано</span>
+                                          {% else %}
+                                            <span>{{ post.post_status }}</span>
+                                          {% endif %}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                            {% if posts_images %}
+                            <div>
+                                <p>Страница: {{ page }}</p>
+                                <a href="/admin?page=1">Первая</a>
+                                {% if page > 1 %}
+                                <a href="/admin?page={{ page - 1 }}">Предыдущая</a>
+                                {% endif %}
+                                <a href="/admin?page={{ page + 1 }}">Следующая</a>
+                            </div>
+                            {% endif %}
+
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+{% include 'static_page/image_selection.html' %}
+
+{% endblock %}

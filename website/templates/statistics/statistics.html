@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Статистика{% endblock %}
+
+{% block content %}
+            <div class="page-header">
+              <h3 class="page-title">
+                <span class="page-title-icon bg-gradient-primary text-white me-2">
+                  <i class="mdi mdi-chart-bar"></i>
+                </span> Статистика
+              </h3>
+            </div>
+
+
+
+        <div class="row">
+              <div class="col-md-12 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+
+                    <form action="/earning" method="POST">
+                        <label for="date">Выберите дату:</label>
+                        <input type="date" id="date" name="date">
+
+                        <button type="submit">Показать данные</button>
+                    </form>
+
+                    <form action="/day_balance" method="POST">
+                        <button type="submit">Дневной баланс</button>
+                    </form>
+
+    <p>Общий доход - {{ data }}</p>
+
+    <h4>Интерактивный график суммы продаж по дням</h4>
+    {{ graph_html | safe }}
+
+{{ balance_data_current_week }}
+</div></div></div></div>
+
+{% endblock %}

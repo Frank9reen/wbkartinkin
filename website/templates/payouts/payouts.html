@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block title %}Заказать выплату{% endblock %}
+
+{% block content %}
+            <div class="page-header">
+              <h3 class="page-title">
+                <span class="page-title-icon bg-gradient-primary text-white me-2">
+                  <i class="mdi mdi-credit-card"></i>
+                </span> Заказать выплату
+              </h3>
+            </div>
+
+
+
+
+<div class="row">
+              <div class="col-md-12 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+
+                    Проводим выплаты раз в месяц до 1 числа следующего месяца.
+                    Если нужна досрочная выплата - обратитесь в чат или к личному менеджеру.
+                    * - обязательные поля
+                    <br><br>
+                    <p>Доход за все время: -
+                        <br>
+                    Накопления: - ₽<br>
+                    Доступно к выводу: -₽ </p>
+
+                        <form action="/payouts_bank" method="post" style="background-color: #f4f4f4; padding: 20px; border-radius: 10px;">
+                            <label for="full_name">Фамилия и имя, как на карте*</label><br>
+                            <input type="text" id="full_name" name="full_name" required><br><br>
+
+                            <label for="phone_number">Номер телефона*</label><br>
+                            <input type="tel" id="phone_number" name="phone_number" required><br><br>
+
+                           <label for="card_number">Номер банковской карты*</label><br>
+                            <input type="text" id="card_number" name="card_number" required maxlength="16" pattern="\d{16}" title="Введите 16 цифр в номере карты"><br><br>
+
+                            <input type="submit" value="Отправить" style="background-color: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
+                        </form>
+
+</div></div></div></div>
+
+
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+
+    th, td {
+        padding: 12px 15px;
+        text-align: center;
+        border: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #f8f9fa;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f8f9fa;
+    }
+
+    tr:hover {
+        background-color: #f1f1f1;
+    }
+
+.payout-table-css {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.payout-table-css th, .payout-table-css td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.payout-table-css th {
+    background-color: #f2f2f2;
+}
+</style>
+
+<div class="row">
+              <div class="col-md-12 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+
+                        {{ payouts_data | safe }}
+</div></div></div></div>
+
+{% endblock %}
