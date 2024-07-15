@@ -49,6 +49,7 @@ https://www.youtube.com/watch?v=CyD2W17u0CI telegram
 - как распаковать проект на сервер? https://github.com/osteamdev/beget-deploy-flask/blob/main/README.md (!)
 https://koyang-kuleshov.ru/blog/flask-on-beget-hosting.html
 https://devhops.ru/i/flask/vhost/?ysclid=lymx163b19773731316
+https://timeweb.cloud/docs/apps/deploying-backend-applications/flask?ysclid=lymx19ulcv743617606
 - задеплоить и подключить работу по апи с ВБ со своими карточками товара, которые занести в базу
 - type hinting больше внимания уделять, часто из-за этого ошибка получается в типах
 - чтобы меньше падал сайт обернуть try - except
