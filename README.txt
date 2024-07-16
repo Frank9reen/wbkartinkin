@@ -26,8 +26,6 @@ https://timeweb.cloud/docs/apps/deploying-backend-applications/flask?ysclid=lymx
 
 
 Задачи:
-- deploy ошибка ModuleNotFoundError: No module named 'flask_bcrypt'
-- подключиться к git репозиторию https://habr.com/ru/articles/820473/
 - /create_post добавить обучение созданию сео описаний при создании кт
 - /create_post добавить требовани к картинкам
 - сделать утилиту по записи данных для каждого пользователя ежедневно в БД
@@ -65,6 +63,9 @@ https://timeweb.cloud/docs/apps/deploying-backend-applications/flask?ysclid=lymx
 - /status можно градиентом сделать статусы как в шаблоне bootstrap
 
 ---done---
+16.07
+- deploy ошибка ModuleNotFoundError: No module named 'flask_bcrypt'
+- подключиться к git репозиторию https://habr.com/ru/articles/820473/
 14.07
 - /create post - ошибки НЕ выходят никакие при добавлении КТ (4.7 выходит)
 - может добавить Рейтинг для авторов, на этой странице можно было бы выводить список из 30 авторов

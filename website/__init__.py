@@ -7,9 +7,11 @@ db = SQLAlchemy()
 bcrypt = Bcrypt()
 mail = Mail()
 
+
 def create_app():
     app = Flask(__name__)
     app.config.from_pyfile('settings.py')
+
     db.init_app(app)
 
     # mail = Mail(app)
