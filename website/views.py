@@ -140,4 +140,3 @@ def oferta():
 @views.route('/confident', methods=['GET'])
 def confident():
     return render_template('static_page/confident.html')
-

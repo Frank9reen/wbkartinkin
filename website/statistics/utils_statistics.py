@@ -4,15 +4,16 @@ import os
 import pandas as pd
 import plotly.express as px
 import requests
+from ..settings import API_stat
 
-API_stat = 'eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjQwMjI2djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTcyNjM0NTQzNywiaWQiOiIwMGRiNGY1ZS00MmVhLTQ0MDUtOTA3My1iZTI3YjYzYTVhNzYiLCJpaWQiOjI5NjE1NDE1LCJvaWQiOjczMDY2OCwicyI6Miwic2lkIjoiNTUwMGU5ZWItOTgwYy00YjkyLWFhYTQtZTI5Zjg3NDNiNjE0IiwidCI6ZmFsc2UsInVpZCI6Mjk2MTU0MTV9.c48Q8Itn6j7bpEpJn37SCthtmqVZHMVtVguLFO9yrbGaCwJ_p8kXoofJMsW0nS2BJk8xcWe0QyodtRXRXQMviw'
+# API_stat = 'eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjQwMjI2djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTcyNjM0NTQzNywiaWQiOiIwMGRiNGY1ZS00MmVhLTQ0MDUtOTA3My1iZTI3YjYzYTVhNzYiLCJpaWQiOjI5NjE1NDE1LCJvaWQiOjczMDY2OCwicyI6Miwic2lkIjoiNTUwMGU5ZWItOTgwYy00YjkyLWFhYTQtZTI5Zjg3NDNiNjE0IiwidCI6ZmFsc2UsInVpZCI6Mjk2MTU0MTV9.c48Q8Itn6j7bpEpJn37SCthtmqVZHMVtVguLFO9yrbGaCwJ_p8kXoofJMsW0nS2BJk8xcWe0QyodtRXRXQMviw'
 headers = {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + API_stat}
 
 
 # получили все продажи work в .views  // дублирует ниже стаоящую функцию
 def get_sales(selected_date):
     # all_articles_user = get_all_articles_user(userid)
-    API_stat = 'eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjQwMjI2djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTcyNzgzNzc1MiwiaWQiOiJlMTc0ZGYwNS05NzEzLTQzMjEtYmQyMC1iMWMzZmUxZjUyNzgiLCJpaWQiOjI5NjE1NDE1LCJvaWQiOjczMDY2OCwicyI6MzIsInNpZCI6IjU1MDBlOWViLTk4MGMtNGI5Mi1hYWE0LWUyOWY4NzQzYjYxNCIsInQiOmZhbHNlLCJ1aWQiOjI5NjE1NDE1fQ.hJQL4g07o9GuCnfVIzVttamdtNu9Zoexu3tTmtQHg3jwpk8WBCr7oy4IlWY-3E_uNOs80NYZtiXv7b2JRfgcwg'
+    # API_stat = 'eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjQwMjI2djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTcyNzgzNzc1MiwiaWQiOiJlMTc0ZGYwNS05NzEzLTQzMjEtYmQyMC1iMWMzZmUxZjUyNzgiLCJpaWQiOjI5NjE1NDE1LCJvaWQiOjczMDY2OCwicyI6MzIsInNpZCI6IjU1MDBlOWViLTk4MGMtNGI5Mi1hYWE0LWUyOWY4NzQzYjYxNCIsInQiOmZhbHNlLCJ1aWQiOjI5NjE1NDE1fQ.hJQL4g07o9GuCnfVIzVttamdtNu9Zoexu3tTmtQHg3jwpk8WBCr7oy4IlWY-3E_uNOs80NYZtiXv7b2JRfgcwg'
     headers = {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + API_stat}
     date_start = selected_date  # Заказы считаются накопительным итогом с текущей даты
     param = {'dateFrom': date_start}
@@ -71,7 +72,7 @@ def get_image_sales(selected_date):  # в .views выводится - возмо
 
 # добавить еще user_id пользователя (!)
 def get_all_sales_user_per_day(selected_date, all_articles_user):
-    API_stat = 'eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjQwMjI2djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTcyNzgzNzc1MiwiaWQiOiJlMTc0ZGYwNS05NzEzLTQzMjEtYmQyMC1iMWMzZmUxZjUyNzgiLCJpaWQiOjI5NjE1NDE1LCJvaWQiOjczMDY2OCwicyI6MzIsInNpZCI6IjU1MDBlOWViLTk4MGMtNGI5Mi1hYWE0LWUyOWY4NzQzYjYxNCIsInQiOmZhbHNlLCJ1aWQiOjI5NjE1NDE1fQ.hJQL4g07o9GuCnfVIzVttamdtNu9Zoexu3tTmtQHg3jwpk8WBCr7oy4IlWY-3E_uNOs80NYZtiXv7b2JRfgcwg'
+    # API_stat = 'eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjQwMjI2djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTcyNzgzNzc1MiwiaWQiOiJlMTc0ZGYwNS05NzEzLTQzMjEtYmQyMC1iMWMzZmUxZjUyNzgiLCJpaWQiOjI5NjE1NDE1LCJvaWQiOjczMDY2OCwicyI6MzIsInNpZCI6IjU1MDBlOWViLTk4MGMtNGI5Mi1hYWE0LWUyOWY4NzQzYjYxNCIsInQiOmZhbHNlLCJ1aWQiOjI5NjE1NDE1fQ.hJQL4g07o9GuCnfVIzVttamdtNu9Zoexu3tTmtQHg3jwpk8WBCr7oy4IlWY-3E_uNOs80NYZtiXv7b2JRfgcwg'
     headers = {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + API_stat}
 
     date_start = selected_date  # Заказы считаются накопительным итогом с текущей даты
