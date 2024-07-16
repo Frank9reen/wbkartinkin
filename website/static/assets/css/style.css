@@ -11959,6 +11959,18 @@ code {
   background: linear-gradient(to right, #e7ebf0, #868e96);
   color: #ffffff; }
 
+
+.badge-gradient-black {
+  background: -webkit-gradient(linear, left top, right top, from(#434646), to(#0f0f0f));
+  background: linear-gradient(to right, #434646, #0f0f0f);
+  color: #ffffff; }
+
+
+.badge-gradient-gray {
+  background: -webkit-gradient(linear, left top, right top, from(#c1c9c8), to(#7a7e7e));
+  background: linear-gradient(to right, #c1c9c8, #7a7e7e);
+  color: #ffffff; }
+
 .badge-gradient-success {
   background: -webkit-gradient(linear, left top, right top, from(#84d9d2), to(#07cdae));
   background: linear-gradient(to right, #84d9d2, #07cdae);

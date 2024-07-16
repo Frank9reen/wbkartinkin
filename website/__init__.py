@@ -4,7 +4,7 @@ from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
-bcrypt = Bcrypt()
+# bcrypt = Bcrypt()
 mail = Mail()
 
 
@@ -14,9 +14,9 @@ def create_app():
 
     db.init_app(app)
 
-    # mail = Mail(app)
+    # mail = Mail(app)  # это раньше так было
     mail.init_app(app)
-    bcrypt.init_app(app)
+    Bcrypt.init_app(app)
 
     from .auth.auth import auth
     from .views import views

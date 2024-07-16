@@ -31,17 +31,17 @@
                                         <td><a href="{{ url_for('kt.show_post', post_id=post.post_id) }}">{{ post.title }}</a></td>
 
                                         <td>{% if post.post_status == 'на модерации' %}
-                                            <span class="badge badge-warning">{{ post.post_status }}</span>
+                                            <span class="badge badge-gradient-warning">{{ post.post_status }}</span>
                                             {% elif post.post_status == 'отклонено' %}
-                                            <span class="badge badge-danger">отклонено</span>
+                                            <span class="badge badge-gradient-danger">отклонено</span>
                                           {% elif post.post_status == 'опубликовано' %}
-                                            <span class="badge badge-success">опубликовано</span>
+                                            <span class="badge badge-gradient-success">опубликовано</span>
                                            {% elif post.post_status == 'отклонено' %}
                                             <span style="color: red;">{{ post.post_status }}</span>
                                             {% elif post.post_status == 'черновик' %}
-                                            <span class="badge badge-grey">черновик</span>
+                                            <span class="badge badge-gradient-gray">черновик</span>
                                              {% elif post.post_status == 'заархивировано' %}
-                                            <span class="badge badge-black">заархивировано</span>
+                                            <span class="badge badge-gradient-black">заархивировано</span>
                                           {% else %}
                                             <span>{{ post.post_status }}</span>
                                           {% endif %}</td>
