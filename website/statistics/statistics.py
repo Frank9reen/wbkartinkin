@@ -19,7 +19,7 @@ cache = Cache()
 
 # изменить названия роутов на более понятные / тут функция будет, а не роут
 # заполнение статистки ежедневно для всех пользователей по всем их КТ
-@statistics.route('/day_balance', methods=['GET', 'POST'])  # надо чтобы включалась не по кнопке, а по времени в 00:00
+@statistics.route('/day_balance', methods=['GET', 'POST'])  # надо чтобы, включалась не по кнопке, а по времени в 00:00
 @login_required
 def day_balance():
     if request.method == 'POST':
@@ -33,7 +33,6 @@ def day_balance():
             if all_post_ids:
                 # создать артикулы для пользователя
                 all_articles_user: list = [f'{user_id}-{post_id}' for post_id in all_post_ids]
-                # print(all_articles_user)
                 current_date = datetime.now()
                 day_balance = get_all_sales_user_per_day(current_date, all_articles_user)
 
@@ -68,48 +67,4 @@ def get_statistics():
             return render_template('statistics/statistics.html', balance_data_current_week=balance_data_current_week)
     else:
         return 'Ошибка: Недопустимый метод запроса'
-
-
-# @cache.cached(timeout=3600)  # Кэширование на 1 час
-# @statistics.route('/earning', methods=['GET', 'POST'])
-# @login_required
-# def earning():
-#     if request.method == 'POST':
-#         selected_date = request.form['date']
-#         data = get_sales(selected_date)
-#         graph_html = get_image_sales(selected_date)
-#     else:
-#         data = get_sales()
-#     return render_template('statistics/statistics.html', data=data, graph_html=graph_html)
-
-
-
-
-
-
-
-
-# @statistics.route('/week_balance', methods=['GET', 'POST'])
-# @login_required
-# def week_balance():
-#     if request.method == 'POST':
-#         user_id = session.get('user_id')
-#
-#         today = datetime.now()
-#         start_of_month = datetime(today.year, today.month, 1)
-#
-#         total_week_balance = db.session.query(func.sum(Balance.day_balance)).filter(Balance.user_id == user_id,
-#                                                                             Balance.date < start_of_month).scalar()
-#
-#         if total_week_balance is not None:
-#             current_date = datetime.now()
-#             new_balance_record = Balance(week_balance=total_week_balance, date=current_date, user_id=user_id)
-#             db.session.add(new_balance_record)
-#             db.session.commit()
-#             return render_template('statistics.html',
-#                                    total_week_balance=total_week_balance)  # передаем total_week_balance в шаблон
-#         else:
-#             return 'Ошибка: Нет данных о доходе для данного пользователя'
-#     else:
-#         return 'Ошибка: Недопустимый метод запроса'
 

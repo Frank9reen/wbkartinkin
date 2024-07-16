@@ -14,13 +14,19 @@ Frontend - Bootstrap 5 (шаблон Bootsrap Dash), Java script
 Если вызывать еще раз добавление, то текст поверх создается. ??
 Получается добавить картинку одну когда КТ уже создана с текстом. ??
 ---
-
 https://flask.ivan-shamaev.ru/python-flask-initial-setting-vps-server/?ysclid=lybad170dc67410233
 https://devhops.ru/i/flask/vhost/?ysclid=lyb90ajvkw535268215
 https://beget.com/ru/kb/how-to/web-apps/python#ustanovka-mikrofreymvorka-flask
 https://www.youtube.com/watch?v=CyD2W17u0CI telegram
+- как распаковать проект на сервер?
+https://github.com/osteamdev/beget-deploy-flask/blob/main/README.md (!)
+https://devhops.ru/i/flask/vhost/?ysclid=lymx163b19773731316
+https://beget.com/ru/kb/how-to/web-apps/python#ustanovka-mikrofreymvorka-flask
+https://timeweb.cloud/docs/apps/deploying-backend-applications/flask?ysclid=lymx19ulcv743617606
+
 
 Задачи:
+- deploy ошибка ModuleNotFoundError: No module named 'flask_bcrypt'
 - подключиться к git репозиторию https://habr.com/ru/articles/820473/
 - /create_post добавить обучение созданию сео описаний при создании кт
 - /create_post добавить требовани к картинкам
@@ -46,10 +52,6 @@ https://www.youtube.com/watch?v=CyD2W17u0CI telegram
 - добавить значок телеграмма для помощи как в adfinity.pro
 - лучше все пароли из settings убрать в .env и gitignore поставить игнор
 - /registration сделать регистрацию с подтверждением email или по аккаунту vk.com / yandex.ru
-- как распаковать проект на сервер? https://github.com/osteamdev/beget-deploy-flask/blob/main/README.md (!)
-https://devhops.ru/i/flask/vhost/?ysclid=lymx163b19773731316
-https://beget.com/ru/kb/how-to/web-apps/python#ustanovka-mikrofreymvorka-flask
-https://timeweb.cloud/docs/apps/deploying-backend-applications/flask?ysclid=lymx19ulcv743617606
 - задеплоить и подключить работу по апи с ВБ со своими карточками товара, которые занести в базу
 - type hinting больше внимания уделять, часто из-за этого ошибка получается в типах
 - чтобы меньше падал сайт обернуть try - except

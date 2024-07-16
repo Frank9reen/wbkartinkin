@@ -1,8 +1,9 @@
 import os
 
 import requests
+from ..settings import YADISK_TOKEN
 
-YADISK_TOKEN = 'y0_AgAAAAB2MMm-AAwWlQAAAAEKJb9SAAAahHB98ExJLbZtFW_ppmbOnp8zDw'
+
 headers = {'Authorization': 'OAuth ' + YADISK_TOKEN}
 
 
