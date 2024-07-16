@@ -6,7 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 bcrypt = Bcrypt()
-# cache = Cache()
+cache = Cache()
 
 
 def create_app():
@@ -16,7 +16,7 @@ def create_app():
 
     mail = Mail(app)
     bcrypt.init_app(app)
-    # cache = cache.init_app(app)  # Инициализируем кэширование
+    cache.init_app(app)
 
     from .auth.auth import auth
     from .views import views
