@@ -4,6 +4,7 @@ from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
+
 db = SQLAlchemy()
 bcrypt = Bcrypt()
 mail = Mail()
@@ -15,9 +16,8 @@ def create_app():
     app.config.from_pyfile('settings.py')
 
     db.init_app(app)
-    migrate.init_app(app)
+    migrate.init_app(app, db, render_as_batch=True)  #msodo
 
-    # mail = Mail(app)  # это раньше так было
     mail.init_app(app)
     bcrypt.init_app(app)
 
