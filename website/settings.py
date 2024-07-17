@@ -2,9 +2,9 @@ import os
 
 
 SECRET_KEY = os.urandom(36)
-SQLALCHEMY_DATABASE_URI = 'mysql://root:020188@localhost/db2'  # подключение к MySQL через SQLAlchemy
+# SQLALCHEMY_DATABASE_URI = 'mysql://root:020188@localhost/db2'  # подключение к MySQL через SQLAlchemy
 
-# SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI')  # через переменную окружения
+SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI') or 'mysql://root:020188@localhost/db2'  # через переменную окружения
 # SQLALCHEMY_TRACK_MODIFICATIONS = os.environ.get('SQLALCHEMY_TRACK_MODIFICATIONS')  # добавил
 
 
