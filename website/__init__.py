@@ -31,8 +31,6 @@ def create_app():
     from .payouts.payouts import payouts
     from .rating.rating import rating
 
-    from .models import User, Post  #?
-
     app.register_blueprint(auth)
     app.register_blueprint(views)
     app.register_blueprint(status)
@@ -42,8 +40,5 @@ def create_app():
     app.register_blueprint(message)
     app.register_blueprint(payouts)
     app.register_blueprint(rating)
-
-    with app.app_context():  # создание б
-        db.create_all()
 
     return app
