@@ -26,7 +26,8 @@ https://timeweb.cloud/docs/apps/deploying-backend-applications/flask?ysclid=lymx
 
 
 Задачи:
-- установка окружения https://www.youtube.com/watch?v=IBfj_0Zf2Mo
+- закрыть в приват github
+- установка окружения gg
 - post/id не раскрывается меню добавить карточку товара когда на странице нахожусь
 - /create_post добавить обучение созданию сео описаний при создании кт
 - /create_post добавить требование к картинкам
