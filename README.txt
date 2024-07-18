@@ -24,7 +24,8 @@ https://devhops.ru/i/flask/vhost/?ysclid=lymx163b19773731316
 https://beget.com/ru/kb/how-to/web-apps/python#ustanovka-mikrofreymvorka-flask
 https://timeweb.cloud/docs/apps/deploying-backend-applications/flask?ysclid=lymx19ulcv743617606
 https://www.youtube.com/channel/UCLr7DxWBT0NWZv_w4uvLJaw
-
+https://coder-folder.com/posts/229/deploi-prilozheniia-flask-uwsgi-docker-nginx-postgresql?ysclid=lyr6rihy2966365767
+https://coder-folder.com/posts/182/deploi-flask-prilozheniia-na-server-linux
 
 Задачи:
 - настроить обновление через гит на бегете

@@ -16,7 +16,7 @@ def create_app():
     app.config.from_pyfile('settings.py')
 
     db.init_app(app)
-    migrate.init_app(app, db, render_as_batch=True)  #msodo
+    migrate.init_app(app, db, render_as_batch=True)  # сделано у техервова м.
 
     mail.init_app(app)
     bcrypt.init_app(app)
