@@ -23,9 +23,11 @@ https://github.com/osteamdev/beget-deploy-flask/blob/main/README.md (!)
 https://devhops.ru/i/flask/vhost/?ysclid=lymx163b19773731316
 https://beget.com/ru/kb/how-to/web-apps/python#ustanovka-mikrofreymvorka-flask
 https://timeweb.cloud/docs/apps/deploying-backend-applications/flask?ysclid=lymx19ulcv743617606
+https://www.youtube.com/channel/UCLr7DxWBT0NWZv_w4uvLJaw
 
 
 Задачи:
+- настроить обновление через гит на бегете
 - закрыть в приват github
 - установка окружения gg
 - post/id не раскрывается меню добавить карточку товара когда на странице нахожусь
@@ -66,6 +68,12 @@ https://timeweb.cloud/docs/apps/deploying-backend-applications/flask?ysclid=lymx
 - /status можно градиентом сделать статусы как в шаблоне bootstrap
 
 ---done---
+18.07
+- обновил модули  в проекте
+- подключил gunicorn
+- подключил nginx
+17.07
+- подключился к БД удаленной с приложения фласк
 16.07
 - deploy ошибка ModuleNotFoundError: No module named 'flask_bcrypt'
 - подключиться к git репозиторию https://habr.com/ru/articles/820473/

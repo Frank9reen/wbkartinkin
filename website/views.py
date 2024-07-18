@@ -34,8 +34,8 @@ def admin():
         offset = (page - 1) * per_page
 
         # вывод общего баланса
-        total_balance = db.session.query(func.sum(Balance.day_balance)).filter(Balance.user_id == user_id).scalar()
-        total_balance = int(total_balance)
+        # total_balance = db.session.query(func.sum(Balance.day_balance)).filter(Balance.user_id == user_id).scalar()
+        # total_balance = int(total_balance)
         # вывод всех кт пользователя
         posts_with_images = db.session.query(Post, Image).join(Image).filter(Post.user_id == user_id,
                                                                              Image.image_order == 0).order_by(Post.post_id.desc()).offset(
@@ -69,7 +69,7 @@ def admin():
         # Сортировка по Id в порядке убывания
         filtered_posts_sorted = sorted(filtered_posts, key=lambda x: x.post_id, reverse=True)
 
-        return render_template('admin.html', posts_images=posts_with_images, posts=filtered_posts_sorted, page=page, total_balance=total_balance, selected_status=status, status_counts=status_counts)
+        return render_template('admin.html', posts_images=posts_with_images, posts=filtered_posts_sorted, page=page, selected_status=status, status_counts=status_counts)
     else:
         return redirect(url_for('views.index'))
 
