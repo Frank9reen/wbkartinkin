@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block title %}Общий рейтинг всех авторов{% endblock %}
+
+{% block content %}
+            <div class="page-header">
+              <h3 class="page-title">
+                <span class="page-title-icon bg-gradient-primary text-white me-2">
+                  <i class="mdi mdi-format-list-numbered"></i>
+                </span> Общий рейтинг всех авторов за неделю //указать диапазон//
+              </h3>
+            </div>
+
+<style>
+    .highlighted-row {
+        background-color: #e0f7fa; /* Светлый фон для подсветки */
+    }
+</style>
+
+        <div class="row">
+              <div class="col-md-12 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+
+
+
+                                    <table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Рейтинг</th>
+            <th>Имя пользователя</th>
+            <th>Заработанные деньги</th>
+            <th>Количество карточек</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for rating in ratings %}
+        <tr class="{% if rating.user_id == current_user_id %}table-primary{% endif %}">
+            <td>{{ rating.rating }}</td>
+            <td>{{ rating.user.username }}</td>
+            <td>{{ rating.sum_money if rating.sum_money is not none else 0 }}</td>
+            <td>{{ rating.sum_cards if rating.sum_cards is not none else 0 }}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="4" class="text-center">Нет доступных данных</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+
+
+
+
+                  </div>
+                </div>
+              </div>
+        </div>
+
+{% endblock %}

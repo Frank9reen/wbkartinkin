@@ -8,7 +8,7 @@ from flask_mail import Message
 
 from .. import bcrypt
 from .. import db
-from ..models import User, Wallet
+from ..models import User, Wallet, Rating
 
 auth = Blueprint('auth', __name__)
 
@@ -35,6 +35,11 @@ def add_record():
             # Создаем запись в таблице Wallet для нового пользователя
             new_wallet = Wallet(user_id=new_user.user_id, balance=0)
             db.session.add(new_wallet)
+            db.session.commit()
+
+            # Создаем запись в таблице Rating для нового пользователя
+            new_rating = Rating(sum_money=0, sum_cards=0, rating=0, k_rating=1, user_id=new_user.user_id)
+            db.session.add(new_rating)
             db.session.commit()
 
         return redirect(url_for('auth.login'))
@@ -89,7 +94,7 @@ def forgot_password():
             msg.body = f'Для сброса пароля перейдите по ссылке: {url_for("auth.reset_password", token=token, _external=True)}'
             mail = current_app.extensions['mail']
             mail.send(msg)
-            return render_template('password_reset_email_sent.html')
+            return render_template('auth/password_reset_email_sent.html')
         error = 'Пользователь с таким email не найден.'
         return render_template('auth/forgot_password.html', error=error)
     else:

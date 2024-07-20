@@ -81,7 +81,7 @@ def get_all_sales_user_per_day(selected_date, all_articles_user):
                               params=param)
     orders_data = response_1.json()
 
-    # all_articles_user = ['tomjerry-13', 'banksi-1', 'tomjerry-7', 'disney-6']  # это потом заменить (!)
+    all_articles_user = ['tomjerry-13', 'banksi-1', 'tomjerry-7', 'disney-6']  # это потом заменить (!)
     total_forPay_all = 0
 
     # Проход по каждому артикулу из списка all_articles_user

@@ -15,16 +15,26 @@ class Balance(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))  # связь с таблицей пользователей
 
 
-
-class Rating(db.Model):  # ! таблицу поправить не проработаны столбцы
+class Rating(db.Model):
     __tablename__ = 'rating'
     rating_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    sum_money = db.Column(db.Integer, nullable=False)  # нужна ли эта сумма денег заработанная тут? это связать с UserStatistic
-    sum_cards = db.Column(db.Integer, nullable=False)  # нужно ли количество карточек товаров тут? это связатть с Post
-    rating = db.Column(db.Integer, nullable=False)  # рейтинг пользователя int
-    k_rating = db.Column(db.Integer, nullable=False)  # коэффициент увеличения
-    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))  # Связь с таблицей пользователей
+    sum_money = db.Column(db.Integer, nullable=True)
+    sum_cards = db.Column(db.Integer, nullable=True)
+    rating = db.Column(db.Integer, nullable=False, index=True)  # индекс для более быстрого поиска
+    k_rating = db.Column(db.Integer, nullable=False, default=1)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
 
+    @classmethod
+    def update_ratings(cls):
+        # Получаем все записи из таблицы Rating и сортируем их по убыванию
+        ratings = cls.query.order_by(cls.sum_money.desc()).all()  # например, можно сортировать по sum_money
+
+        # Обновляем поле rating для каждого пользователя, присваивая порядковый номер
+        for index, user_rating in enumerate(ratings, start=1):
+            user_rating.rating = index  # Присваиваем порядковый номер
+            db.session.add(user_rating)  # Добавляем изменения в сессию
+
+        db.session.commit()  # Сохраняем изменения в БД
 
 class Payouts_bank(db.Model):  # изменить название на стиль верблюда
     __tablename__ = 'payouts_bank'
@@ -65,6 +75,8 @@ class User(db.Model):
     password = db.Column(db.String(150), unique=True, nullable=False)
     user_role = db.Column(db.String(50), unique=True, nullable=False)
     reset_password_token = db.Column(db.String(100), nullable=True)
+
+    ratings = db.relationship('Rating', backref='user', lazy=True)  # добавил, но надо ли?
 
     def check_password(self, password):
         return bcrypt.checkpw(password.encode('utf-8'), self.password.encode('utf-8'))

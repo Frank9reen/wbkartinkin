@@ -28,9 +28,8 @@ https://coder-folder.com/posts/229/deploi-prilozheniia-flask-uwsgi-docker-nginx-
 https://coder-folder.com/posts/182/deploi-flask-prilozheniia-na-server-linux
 
 Задачи:
-- настроить обновление через гит на бегете
-- закрыть в приват github
-- установка окружения gg
+- на удаленном сервере не записыается в БД пользователь
+- не работает GUNICORN - нет работы с БД, просто .py работает
 - post/id не раскрывается меню добавить карточку товара когда на странице нахожусь
 - /create_post добавить обучение созданию сео описаний при создании кт
 - /create_post добавить требование к картинкам
@@ -54,9 +53,7 @@ https://coder-folder.com/posts/182/deploi-flask-prilozheniia-na-server-linux
 - /statistics - проверка текущей даты, тк если дата больше то выходит ошибка
 - /statistics добавить кэширование в statistics чтобы не грузить постоянно сервер
 - добавить значок телеграмма для помощи как в adfinity.pro
-- лучше все пароли из settings убрать в .env и gitignore поставить игнор
 - /registration сделать регистрацию с подтверждением email или по аккаунту vk.com / yandex.ru
-- задеплоить и подключить работу по апи с ВБ со своими карточками товара, которые занести в базу
 - type hinting больше внимания уделять, часто из-за этого ошибка получается в типах
 - чтобы меньше падал сайт обернуть try - except
 - для функций можно использоваться try logger.debug / except loger.warning / finally logger.debug
@@ -69,7 +66,14 @@ https://coder-folder.com/posts/182/deploi-flask-prilozheniia-na-server-linux
 - /status можно градиентом сделать статусы как в шаблоне bootstrap
 
 ---done---
+19.07
+- добавил сортировку и вывод рейтинга на сттраинцах
+- настроить обновление через гит на бегете
+- установка окружения gg
+- лучше все пароли из settings убрать в .env и gitignore поставить игнор
+- задеплоить и подключить работу по апи с ВБ со своими карточками товара, которые занести в базу
 18.07
+- закрыть в приват github
 - обновил модули  в проекте в myvenv
 - подключил gunicorn и nginx
 - закрыл git как private
