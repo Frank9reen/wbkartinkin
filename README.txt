@@ -28,6 +28,7 @@ https://coder-folder.com/posts/229/deploi-prilozheniia-flask-uwsgi-docker-nginx-
 https://coder-folder.com/posts/182/deploi-flask-prilozheniia-na-server-linux
 
 Задачи:
+- /admin добавить круговую диаграмму или график столбчатый на главную страницу
 - на удаленном сервере не записыается в БД пользователь
 - не работает GUNICORN - нет работы с БД, просто .py работает
 - post/id не раскрывается меню добавить карточку товара когда на странице нахожусь
