@@ -16,8 +16,8 @@ from ..status.utils_status import change_moderate
 kt = Blueprint('kt', __name__)
 
 
-@kt.route('/post/<int:post_id>', methods=['GET', 'POST'])  # вывод КТ
-@login_required
+@kt.route('/post/<int:post_id>', methods=['GET', 'POST'])  # не выпадают меню
+# @login_required
 def show_post(post_id):
     errors = []
     if 'user_id' in session:
@@ -216,7 +216,7 @@ def add_post(title, content, user_id, post_status):
 
 
 @kt.route('/create_post', methods=['GET', 'POST'])
-@login_required
+# @login_required
 def create_post():
     if request.method == 'GET':
         if 'user_id' in session:
@@ -245,7 +245,7 @@ def create_post():
 
 # Маршрут для обработки отправленного комментария
 @kt.route('/add_comment', methods=['POST'])
-@login_required
+# @login_required
 def add_comment():
     if 'user_id' in session:
         user_id = session.get('user_id')

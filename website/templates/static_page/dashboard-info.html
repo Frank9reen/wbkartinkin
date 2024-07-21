@@ -17,7 +17,10 @@
                     <h4 class="font-weight-normal mb-3">Карточек товара сделано <i class="mdi mdi-bookmark-outline mdi-24px float-right"></i>
                     </h4>
                     <h2 class="mb-5">{{ sum_cards }}</h2>
-<!--                    <h6 class="card-text">Decreased by 10%</h6>-->
+                    <h6 class="card-text">
+                    {% if check_max_cards %}
+                        <i class="mdi mdi-code-greater-than"></i>
+                    {% endif %}{{ check_max_cards }}</h6>
                   </div>
                 </div>
               </div>

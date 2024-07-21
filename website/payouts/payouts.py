@@ -17,7 +17,7 @@ payouts = Blueprint('payouts', __name__)
 
 
 @payouts.route('/payouts', methods=['GET'])
-@login_required
+# @login_required
 def payouts_func():
     if 'user_id' in session:
         user_id = session.get('user_id')
@@ -42,7 +42,7 @@ def payouts_func():
 
 
 @payouts.route('/payouts_bank', methods=['POST'])
-@login_required
+# @login_required
 def submit_form():
     full_name = request.form['full_name']
     phone_number = request.form['phone_number']
@@ -73,14 +73,14 @@ def submit_form():
 
 
 @payouts.route('/payouts_data', methods=['GET'])
-@login_required
+# @login_required
 def payouts_data():
     payouts_data = db.session.query(Payouts_bank, Payouts).join(Payouts).order_by(Payouts.payout_id.desc()).all()
     return render_template('payouts/payouts-admin.html', payouts_data=payouts_data)
 
 
 @payouts.route('/payouts/<int:payout_id>', methods=['GET', 'POST'])
-@login_required
+# @login_required
 def show_payouts(payout_id):
     payout = Payouts.query.get(payout_id)  # Получение заявки по payout_id
     bank_info = Payouts_bank.query.filter_by(payout_id=payout_id).first()  # Получение информации из таблицы payouts_bank
@@ -105,7 +105,7 @@ def show_payouts(payout_id):
 
 
 @payouts.route('/payouts/<int:payout_id>/approve', methods=['POST'])
-@login_required
+# @login_required
 def change_payout_status(payout_id):
     payout = Payouts.query.get(payout_id)
     if not payout:

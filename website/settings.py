@@ -1,9 +1,8 @@
 import os
 from dotenv import load_dotenv
 
-# для переменных окружения - сейчас не использую
 basedir = os.path.abspath(os.path.dirname(__name__))
-load_dotenv(os.path.join(basedir, '.env'))  # blog????? а что нао
+load_dotenv(os.path.join(basedir, '.env'))
 
 
 SECRET_KEY = os.urandom(36)

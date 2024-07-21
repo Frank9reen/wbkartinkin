@@ -72,30 +72,27 @@ def rating_user(user_id):
             'sum_cards': 0,
             'rating': 0
         }
-
     return user_rating.sum_money, user_rating.sum_cards, user_rating.rating
 
 
-
 @views.route('/admin', methods=['GET'])  # работа с админкой
-@login_required
+# @login_required
 def admin():
     if 'user_id' in session:
         user_id = session.get('user_id')
         posts_with_images, filtered_posts_sorted, page, status, status_counts = post_with_images(user_id)
         sum_money, sum_cards, rating = rating_user(user_id)
-        # вывод общего баланса
-        # total_balance = db.session.query(func.sum(Balance.day_balance)).filter(Balance.user_id == user_id).scalar()
-        # total_balance = int(total_balance)
+        # check
+        check_max_cards = Rating.check_max_sum_cards(user_id)
         # вывод всех кт пользователя
 
-        return render_template('admin.html', posts_images=posts_with_images, posts=filtered_posts_sorted, page=page, selected_status=status, status_counts=status_counts, sum_money=sum_money, sum_cards=sum_cards, rating=rating)
+        return render_template('admin.html', posts_images=posts_with_images, posts=filtered_posts_sorted, page=page, selected_status=status, status_counts=status_counts, sum_money=sum_money, sum_cards=sum_cards, rating=rating, check_max_cards=check_max_cards)
     else:
         return redirect(url_for('views.index'))
 
 
 @views.route('/superadmin', methods=['GET'])
-@login_required
+# @login_required
 def superadmin():
     posts = Post.get_all_posts()
     posts_3status = Post.get_posts_by_status(['на модерации', 'опубликовано', 'отклонено'])
@@ -127,19 +124,12 @@ def superadmin():
     return render_template('superadmin.html', posts=filtered_posts_sorted, selected_status=status, status_counts=status_counts)
 
 
-@views.route('/settings', methods=['GET'])
-@login_required  # работает
+@views.route('/get_settings', methods=['GET'])
+# @login_required
 def get_settings():
     user_id = session.get('user_id')
-    print(user_id)
     user = User.query.get(user_id)
-    print(user)
-    user_wallet = Wallet.query.filter_by(user_id=user_id).first()  # тут не работает
-
-    if user and user_wallet:
-        return render_template('auth/settings.html', username=user.username, email=user.email,  balance=user_wallet.balance)
-    else:
-        return "Ошибка: Пользователь или кошелек не найден."
+    return render_template('auth/settings.html', username=user.username, email=user.email)
 
 
 @views.route('/education', methods=['GET'])
@@ -161,5 +151,4 @@ def confident():
 def rating():
     current_user_id = session.get('user_id')
     ratings = Rating.query.order_by(Rating.rating.asc()).all()
-    Rating.update_ratings()
     return render_template('rating/rating.html', ratings=ratings, current_user_id=current_user_id)

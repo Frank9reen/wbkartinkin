@@ -32,11 +32,6 @@ def add_record():
             db.session.add(new_user)
             db.session.commit()
 
-            # Создаем запись в таблице Wallet для нового пользователя
-            new_wallet = Wallet(user_id=new_user.user_id, balance=0)
-            db.session.add(new_wallet)
-            db.session.commit()
-
             # Создаем запись в таблице Rating для нового пользователя
             new_rating = Rating(sum_money=0, sum_cards=0, rating=0, k_rating=1, user_id=new_user.user_id)
             db.session.add(new_rating)

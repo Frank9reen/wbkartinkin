@@ -25,16 +25,29 @@ class Rating(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
 
     @classmethod
-    def update_ratings(cls):
+    def update_ratings(cls):  # не нужная функция
         # Получаем все записи из таблицы Rating и сортируем их по убыванию
         ratings = cls.query.order_by(cls.sum_money.desc()).all()  # например, можно сортировать по sum_money
-
         # Обновляем поле rating для каждого пользователя, присваивая порядковый номер
         for index, user_rating in enumerate(ratings, start=1):
             user_rating.rating = index  # Присваиваем порядковый номер
             db.session.add(user_rating)  # Добавляем изменения в сессию
-
         db.session.commit()  # Сохраняем изменения в БД
+
+    @classmethod
+    def check_max_sum_cards(cls, user_id):  # no work - may be delete
+        # Получаем текущее значение sum_cards для пользователя
+        current_rating = cls.query.filter_by(user_id=user_id).first()
+        if not current_rating:
+            return ""
+        # Получаем максимальное значение sum_cards среди всех записей
+        max_sum_cards = cls.query.with_entities(db.func.max(cls.sum_cards)).scalar()
+        # Проверяем, является ли текущее значение sum_cards максимальным
+        if current_rating.sum_cards == max_sum_cards:
+            return 'max среди всех'
+        else:
+            return ""
+
 
 class Payouts_bank(db.Model):  # изменить название на стиль верблюда
     __tablename__ = 'payouts_bank'
@@ -67,15 +80,22 @@ class Payouts(db.Model):
         db.session.commit()
 
 
+# class RoleUser(db.Model):
+#     __tablename__ = 'roleuser'
+#     role_id = db.Column(db.Integer, primary_key=True)
+#     role_user = db.Column(db.String(50), unique=True, nullable=False)
+#     users = db.relationship('User', backref='role', lazy=True)
+
+
 class User(db.Model):
     __tablename__ = 'user'
     user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(150), unique=True, nullable=False)
-    user_role = db.Column(db.String(50), unique=True, nullable=False)
+    user_role = db.Column(db.String(50), nullable=False)
+    # role_id = db.Column(db.Integer, db.ForeignKey('role.role_id'), nullable=False)
     reset_password_token = db.Column(db.String(100), nullable=True)
-
     ratings = db.relationship('Rating', backref='user', lazy=True)  # добавил, но надо ли?
 
     def check_password(self, password):
@@ -110,7 +130,7 @@ class Post(db.Model):
     title = db.Column(db.String(100))
     content = db.Column(db.Text)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
-    post_status = db.Column(db.String(255), unique=True, nullable=False)
+    post_status = db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now, nullable=False)
 
     def __init__(self, title, content, user_id, post_status):

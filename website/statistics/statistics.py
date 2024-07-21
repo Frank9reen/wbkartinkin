@@ -20,7 +20,7 @@ cache = Cache()
 # изменить названия роутов на более понятные / тут функция будет, а не роут
 # заполнение статистки ежедневно для всех пользователей по всем их КТ
 @statistics.route('/day_balance', methods=['GET', 'POST'])  # надо чтобы, включалась не по кнопке, а по времени в 00:00
-@login_required
+# @login_required
 def day_balance():
     if request.method == 'POST':
         user_id = session.get('user_id')
@@ -45,7 +45,7 @@ def day_balance():
 
 
 @statistics.route('/statistics', methods=['GET'])
-@login_required
+# @login_required
 def get_statistics():
     if request.method == 'GET':
         user_id = session.get('user_id')

@@ -1,168 +1,141 @@
 {% extends 'base.html' %}
 {% block title %}Карточка товара{% endblock %}
 
-
 {% block content %}
-            <div class="page-header">
-              <h3 class="page-title">
-                <span class="page-title-icon bg-gradient-primary text-white me-2">
-                  <i class="mdi mdi-satellite"></i>
-                </span> Карточка товара с картинкой
-              </h3>
-            </div>
-
-
+<div class="page-header">
+    <h3 class="page-title">
+        <span class="page-title-icon bg-gradient-primary text-white me-2">
+            <i class="mdi mdi-satellite"></i>
+        </span> Карточка товара с картинкой
+    </h3>
+</div>
 
 <div class="row">
-              <div class="col-lg-12 grid-margin stretch-card">
-                <div class="card">
-                  <div class="card-body"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+    <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="chartjs-size-monitor">
+                    <div class="chartjs-size-monitor-expand">
+                        <div class=""></div>
+                    </div>
+                    <div class="chartjs-size-monitor-shrink">
+                        <div class=""></div>
+                    </div>
+                </div>
 
+                {% if post.post_status == 'черновик' %}
+                    <p><span class="badge badge-grey">{{ post.post_status }}</span></p>
+                {% elif post.post_status == 'на модерации' %}
+                    <p><span class="badge badge-warning">{{ post.post_status }}</span></p>
+                {% elif post.post_status == 'отклонено' %}
+                    <p><span class="badge badge-danger">{{ post.post_status }}</span></p>
+                {% elif post.post_status == 'опубликовано' %}
+                    <p><span class="badge badge-success">{{ post.post_status }}</span></p>
+                {% elif post.post_status == 'заархивировано' %}
+                    <p><span class="badge badge-black">{{ post.post_status }}</span></p>
+                {% else %}
+                    <p>{{ post.post_status }}</p>
+                {% endif %}
 
-                      {% if post.post_status == 'черновик' %}
-                        <p><span class="badge badge-grey">{{ post.post_status }}</span></p>
-                    {% elif post.post_status == 'на модерации' %}
-                        <p><span class="badge badge-warning">{{ post.post_status }}</span></p>
-                    {% elif post.post_status == 'отклонено' %}
-                        <p><span class="badge badge-danger">{{ post.post_status }}</span></p>
-                    {% elif post.post_status == 'опубликовано' %}
-                        <p><span class="badge badge-success">{{ post.post_status }}</span></p>
-                    {% elif post.post_status == 'заархивировано' %}
-                        <p><span class="badge badge-black">{{ post.post_status }}</span></p>
-                    {% else %}
-                        <p>{{ post.post_status }}</p>
-                    {% endif %}
-                    {% if message %} <ul style="color: green;" class="list-arrow"><li>{{ message }}</li></ul>{% endif %}
+                {% if message %}
+                    <ul style="color: green;" class="list-arrow">
+                        <li>{{ message }}</li>
+                    </ul>
+                {% endif %}
 
-                    {% if errors %}
-                        <ul style="color: red;" class="list-ticked">
+                {% if errors %}
+                    <ul style="color: red;" class="list-ticked">
                         {% for error in errors %}
                             <li>{{ error }}</li>
                         {% endfor %}
-                        </ul>
-                    {% endif %}
+                    </ul>
+                {% endif %}
 
+                <form method="post" action="">
+                    <label for="post_title">Наименование:</label><br>
+                    <input type="text" id="post_title" name="post_title" style="width: 300px;" class="form-control" value="{{ post.title }}" maxlength="59">
+                    <span id="titleCount" style="font-size: 12px;"></span><br><br>
 
-                      <form method="post" action="">
-                        <label for="post_title">Наименование:</label><br>
-                        <input type="text" id="post_title" name="post_title" style="width: 300px;" class="form-control" value="{{ post.title }}" maxlength="59">
-                        <span id="titleCount" style="font-size: 12px;"></span><br><br>
+                    <label for="post_content">Описание:</label><br>
+                    <textarea id="post_content" name="post_content" style="width: 300px; height: 100px;" class="form-control" rows="6" cols="50" maxlength="1500">{{ post.content }}</textarea>
+                    <span id="contentCount" style="font-size: 12px;"></span><br><br>
 
+                    <button type="submit" name="edit_title_content" class="btn btn-gradient-dark btn-fw">Изменить описание</button>
+                </form>
+                <br>
 
-                        <label for="post_content">Описание:</label><br>
-                        <textarea id="post_content" name="post_content" style="width: 300px; height: 100px;" class="form-control" rows="6" cols="50" maxlength="1500">{{ post.content }}</textarea>
-                        <span id="contentCount" style="font-size: 12px;"></span><br><br>
+                <form method="post" enctype="multipart/form-data" action="">
+                    <button type="submit" name="edit_image" class="btn btn-gradient-dark btn-fw">Заменить исходник</button>
+                    <input type="file" name="image" class="btn btn-outline-danger btn-icon-text" required>
+                </form>
 
-                        <button type="submit" name="edit_title_content" class="btn btn-gradient-dark btn-fw">Изменить описание</button>
-                    </form>
-                    <br>
-                    <!--<h3>Заменить картинку исходник</h3>-->
-                    <form method="post" enctype="multipart/form-data" action="">
-                        <button type="submit" name="edit_image" class="btn btn-gradient-dark btn-fw" >Заменить исходник</button>
-                        <input type="file" name="image" class="btn btn-outline-danger btn-icon-text" required>
-                    </form>
+                <br>
 
-                    <br>
-                    <!--<h3>Заменить картинки мокапы</h3>-->
-                    <form method="post" enctype="multipart/form-data" action="">
+                <form method="post" enctype="multipart/form-data" action="">
+                    <button type="submit" name="edit_multi_image" class="btn btn-gradient-dark btn-fw">Заменить мокапы</button>
+                    <input type="file" name="multi_images" class="btn btn-outline-danger btn-icon-text" multiple required>
+                </form>
 
-                        <button type="submit" name="edit_multi_image" class="btn btn-gradient-dark btn-fw" >Заменить мокапы</button>
-                        <input type="file" name="multi_images" class="btn btn-outline-danger btn-icon-text" multiple required>
-                    </form>
+                <script>
+                    document.getElementById('post_title').addEventListener('input', function() {
+                        document.getElementById('titleCount').textContent = '(Осталось символов: ' + (59 - this.value.length) + ')';
+                    });
 
+                    document.getElementById('post_content').addEventListener('input', function() {
+                        document.getElementById('contentCount').textContent = '(Осталось символов: ' + (1500 - this.value.length) + ')';
+                    });
+                </script>
 
-                      <script>
-    document.getElementById('post_title').addEventListener('input', function() {
-        document.getElementById('titleCount').textContent = '(Осталось символов: ' + (59 - this.value.length)+ ')';
-    });
+                <br>
 
-    document.getElementById('post_content').addEventListener('input', function() {
-        document.getElementById('contentCount').textContent = '(Осталось символов: ' + (1500 - this.value.length)+ ')';
-    });
-</script>
-
-    <br>
-
-                                    <div class="row">
-                                        <div class="col">
-                                            <form id="delete-form" method="post" action="/posts/{{ post.post_id }}/delete">
-                                                <button type="submit" class="btn btn-gradient-danger btn-fw" onclick="return confirm('Вы уверены, что хотите удалить этот пост?')">Удалить черновик</button>
-                                            </form>
-                                        </div>
-                                        <div class="col">
-                                            <form action="/posts/{{ post_id }}/moderate" method="post">
-                                                <button type="submit" class="btn btn-gradient-primary btn-fw">Отправить на модерацию</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                    <br>
-
-                                    <div class="row">
-                                        {% for url in image_urls %}
-                                          <div class="col-sm-6 col-md-3">
-                                              <img src="{{ url_for('static', filename=url) }}" class="img-thumbnail " style="width: 100%; max-width: 250px;">
-                                          </div>
-                                        {% endfor %}
-                                    </div>
-
-
-                  </div>
+                <div class="row">
+                    <div class="col">
+                        <form id="delete-form" method="post" action="/posts/{{ post.post_id }}/delete">
+                            <button type="submit" class="btn btn-gradient-danger btn-fw" onclick="return confirm('Вы уверены, что хотите удалить этот пост?')">Удалить черновик</button>
+                        </form>
+                    </div>
+                    <div class="col">
+                        <form action="/posts/{{ post_id }}/moderate" method="post">
+                            <button type="submit" class="btn btn-gradient-primary btn-fw">Отправить на модерацию</button>
+                        </form>
+                    </div>
                 </div>
-              </div>
+                <br>
 
+                <div class="row">
+                    {% for url in image_urls %}
+                        <div class="col-sm-6 col-md-3">
+                            <img src="{{ url_for('static', filename=url) }}" class="img-thumbnail" style="width: 100%; max-width: 250px;">
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
-
-
-
+        </div>
+    </div>
+</div>
 
 <div class="row">
-              <div class="col-lg-12 grid-margin stretch-card">
-                <div class="card">
-                  <div class="card-body">
-
-
-<table class="table table-striped">
-        <thead class="thead-dark">
-            <tr>
-                <th class="mdi mdi-message-text">История изменений</th>
-                <th>Дата</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for comment in comments %}
-                <tr>
-                    <td>{{ comment.content }}</td>
-                    <td>{{ comment.comment_date }}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
+    <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th class="mdi mdi-message-text">История изменений</th>
+                            <th>Дата</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for comment in comments %}
+                            <tr>
+                                <td>{{ comment.content }}</td>
+                                <td>{{ comment.comment_date }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
-</div>
-</div>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 {% endblock %}

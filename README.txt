@@ -28,6 +28,8 @@ https://coder-folder.com/posts/229/deploi-prilozheniia-flask-uwsgi-docker-nginx-
 https://coder-folder.com/posts/182/deploi-flask-prilozheniia-na-server-linux
 
 Задачи:
+- /models вынести Role как отдельную таблицу
+- /rating сравнение с предыдущей неделей и изменение в int рейтинга (-9) и также с КТ
 - /admin добавить круговую диаграмму или график столбчатый на главную страницу
 - на удаленном сервере не записыается в БД пользователь
 - не работает GUNICORN - нет работы с БД, просто .py работает
