@@ -3,6 +3,7 @@
 
 
 {% block content %}
+
     <div class="page-header">
         <h3 class="page-title">
             <span class="page-title-icon bg-gradient-primary text-white me-2">
@@ -64,13 +65,17 @@
 
                     {% if post.post_status not in ['на модерации', 'заархивировано'] %}
                         <form id="archive_post" method="post" action="/posts/{{ post.post_id }}/archive" onsubmit="return confirm('Вы уверены, что хотите снять карточку товара с ВБ? Она будет удалена в течение 30 дней')">
-                            <button type="submit" class="btn btn-danger">Снять с ВБ</button>
+                            <button type="submit" class="btn btn-gradient-danger btn-fw">Снять с ВБ</button>
                         </form>
                     {% endif %}
                 </div>
             </div>
         </div>
     </div>
+
+
+
+
 
     <div class="row">
         <div class="col-lg-12 grid-margin stretch-card">

@@ -8,7 +8,7 @@ from flask_mail import Message
 
 from .. import bcrypt
 from .. import db
-from ..models import User, Wallet, Rating
+from ..models import User, Rating
 
 auth = Blueprint('auth', __name__)
 

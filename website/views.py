@@ -9,7 +9,7 @@ from sqlalchemy import func
 
 from . import db
 from .auth.utils_auth import login_required
-from .models import Post, Image, User, Wallet, Payouts, Payouts_bank, Balance, WbPost, Rating
+from .models import Post, Image, User, Payouts, Payouts_bank, Balance, WbPost, Rating
 
 cache = Cache()
 

@@ -2,7 +2,16 @@
 {% block title %}Карточка товара{% endblock %}
 
 {% block content %}
-    <div class="row">
+<div class="page-header">
+              <h3 class="page-title">
+                <span class="page-title-icon bg-gradient-primary text-white me-2">
+                  <i class="mdi mdi-check-circle"></i>
+                </span> Модерация карточки товара
+              </h3>
+</div>
+
+
+ <div class="row">
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
@@ -15,7 +24,9 @@
                         </div>
                     </div>
 
-                    {% if post.post_status == 'на модерации' %}
+                    {% if post.post_status == 'черновик' %}
+                        <p><span class="badge badge-grey">{{ post.post_status }}</span></p>
+                    {% elif post.post_status == 'на модерации' %}
                         <p><span class="badge badge-warning">{{ post.post_status }}</span></p>
                     {% elif post.post_status == 'отклонено' %}
                         <p><span class="badge badge-danger">{{ post.post_status }}</span></p>
@@ -27,25 +38,45 @@
                         <p>{{ post.post_status }}</p>
                     {% endif %}
 
+
+
+                     <!-- Здесь отображаем flash-сообщения -->
+                       {% with messages = get_flashed_messages(with_categories=True) %}
+                           {% if messages %}
+                               <ul class="list-arrow">
+                               {% for category, message in messages %}
+                                   <li  class="text-success">{{ message }}</li>
+                               {% endfor %}
+                               </ul>
+                           {% endif %}
+                       {% endwith %}
+
+
+
                     {% if wbpost.articul_wb %}
                         <a href="https://www.wildberries.ru/catalog/{{ wbpost.articul_wb }}/detail.aspx" class="mdi mdi-link-variant">Страница карточки товара на WB</a>
                     {% endif %}
-                    <br>
-                    <div class="col-md-9">
-                        Наименование: {{ post.title }}
-                        <br>
-                        Описание: {{ post.content }}
-                        <br><br>
 
-                        <div class="row">
-                            {% for url in image_urls %}
-                                <div class="col-sm-6 col-md-3">
-                                    <img src="{{ url_for('static', filename=url) }}" class="img-thumbnail" style="width: 100%; max-width: 250px;">
-                                </div>
-                            {% endfor %}
-                        </div>
+                    <p>
+                        <blockquote class="blockquote blockquote-primary">
+                            <p>{{ post.title }}</p>
+                        </blockquote>
+                    </p>
+                    <p>
+                        <blockquote class="blockquote blockquote-primary">
+                            <p>{{ post.content }}</p>
+                        </blockquote>
+                    </p>
 
-                        {% if post.post_status != 'опубликовано' %}
+                    <div class="row">
+                        {% for url in image_urls %}
+                            <div class="col-sm-6 col-md-3">
+                                <img src="{{ url_for('static', filename=url) }}" class="img-thumbnail " style="width: 100%; max-width: 250px;">
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                                        {% if post.post_status != 'опубликовано' %}
                             <form action="/posts/{{ post.post_id }}/approve" method="post" onsubmit="return confirm('Подтвердите публикацию карточки товара на WB')">
                                 <button type="submit" class="btn btn-gradient-success btn-fw">Опубликовать</button>
                             </form>
@@ -54,17 +85,52 @@
                         <br>
 
                         <form action="/posts/{{ post.post_id }}/reject" method="post">
-                            <button type="submit" class="btn btn-danger">Отклонить</button>
+                            <button type="submit" class="btn btn-gradient-danger btn-fw">Отклонить</button>
                         </form>
-
-                    </div>
-
                 </div>
             </div>
         </div>
     </div>
 
-    <table class="table table-striped">
+ <div class="row">
+<div class="col-md-12 grid-margin stretch-card">
+                    <div class="card">
+                      <div class="card-body"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+
+                           <h4 class="card-title">Инструкция <i class="mdi mdi-alert-circle-outline icon-sm text-primary align-middle"></i></h4>
+                    <ul class="list-arrow">
+                        <li>Важно, чтобы фон был белый у исходного изображения, так как потом принт наносится на белую поверхность </li>
+                        <li>Не должно быть нарушения законов РФ по дискриминации, оскорблении третьих лиц</li>
+                    </ul>
+
+                          </div></div></div>
+</div>
+
+
+ <div class="row">
+        <div class="col-lg-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <div class="chartjs-size-monitor">
+                        <div class="chartjs-size-monitor-expand">
+                            <div class=""></div>
+                        </div>
+                        <div class="chartjs-size-monitor-shrink">
+                            <div class=""></div>
+                        </div>
+                    </div>
+
+
+                            <form method="post" enctype="multipart/form-data" action="/add_comment">
+                                <label for="comment_text" class="mdi mdi-comment-plus-outline">Добавить комментарий</label><br>
+                                <br>
+                                <textarea class="form-control" d="comment_text" name="comment_text" rows="4" placeholder="Оставьте комментарий для автора для пояснений в случае отклонения карточки товара, что бы автор знал что исправить"></textarea>
+                                <br>
+                                <input type="hidden" name="post_id" value="{{ post.post_id }}">
+                                <input type="submit" name="add_comment" value="Добавить комментарий" class="btn btn-gradient-success btn-fw">
+                            </form>
+
+                    <table class="table table-striped">
         <thead class="thead-dark">
             <tr>
                 <th class="mdi mdi-message-text">История изменений</th>
@@ -81,11 +147,15 @@
         </tbody>
     </table>
 
-    <form method="post" enctype="multipart/form-data" action="/add_comment">
-        <label for="comment_text">Добавить комментарий</label><br>
-        <textarea id="comment_text" name="comment_text" placeholder="Оставьте комментарий для автора для пояснений в случае отклонения карточки товара" rows="4" cols="50"></textarea><br><br>
-        <input type="hidden" name="post_id" value="{{ post.post_id }}">
-        <input type="submit" name="add_comment" value="Добавить комментарий">
-    </form>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
 
 {% endblock %}

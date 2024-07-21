@@ -3,7 +3,7 @@ import shutil
 
 from flask import Blueprint
 from flask import render_template, request
-from flask import session, redirect, url_for
+from flask import session, redirect, url_for, flash
 from werkzeug.utils import secure_filename
 
 from .. import db
@@ -164,6 +164,7 @@ def add_post(title, content, user_id, post_status):
 
         if 'files' in request.files:
             files: list = request.files.getlist('files')
+            print(files)
             image_url_list = []
             for idx, mokup in enumerate(files):
                 mokupname = secure_filename(mokup.filename)
@@ -172,7 +173,7 @@ def add_post(title, content, user_id, post_status):
                 mokup_image_url = os.path.join(post_folder, mokupname)
 
                 # Добавляем запись об изображении в таблицу Image БЕЗ website/static
-                new_image_url = image_url.replace('website\static\\', '').replace('\\', '/')
+                new_image_url = mokup_image_url.replace('website\static\\', '').replace('\\', '/')
                 new_image = Image(image_url=new_image_url, user_id=user_id, post_id=new_post.post_id,
                                   image_order=idx + 1)
                 db.session.add(new_image)
@@ -254,4 +255,5 @@ def add_comment():
     post_id = request.form.get('post_id')  # Получаем post_id из формы
     user_id = session.get('user_id')
     Comments.add_comment(comment_content, post_id, user_id)
+    flash('Комментарий к карточке товара добавлен')
     return redirect(url_for('kt.show_post', post_id=post_id))

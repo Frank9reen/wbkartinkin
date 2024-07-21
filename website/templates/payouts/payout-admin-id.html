@@ -3,9 +3,22 @@
 {% block title %}Панель администрирования{% endblock %}
 
 {% block content %}
+<div class="page-header">
+              <h3 class="page-title">
+                <span class="page-title-icon bg-gradient-primary text-white me-2">
+                  <i class="mdi mdi-cards"></i>
+                </span> Детали заявки на выплату
+              </h3>
+            </div>
 
 
-    <h3>Детали заявки на выплату</h3>
+
+<div class="row">
+                  <div class="col-md-12 grid-margin stretch-card">
+                    <div class="card">
+                      <div class="card-body"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+
+
     <table class="table table-bordered">
     <tr>
         <th>ФИО</th>
@@ -43,10 +56,6 @@
             {% endif %}
         </td>
 
-
-
-
-
     </tr>
     <tr>
         <th>Сумма</th>
@@ -61,6 +70,9 @@
         <button type="submit" class="btn btn-success">Оплату сделали</button>
     </form>
 {% endif %}
+
+
+     </div> </div></div></div>
 
 
 {% endblock %}

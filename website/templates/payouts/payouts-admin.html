@@ -3,42 +3,59 @@
 {% block title %}Панель администрирования{% endblock %}
 
 {% block content %}
+<div class="page-header">
+              <h3 class="page-title">
+                <span class="page-title-icon bg-gradient-primary text-white me-2">
+                  <i class="mdi mdi-credit-card"></i>
+                </span> Заявки на выплаты
+              </h3>
 
-    <h3>Заявки на выплаты</h3>
-    <table class="table table-striped table-bordered">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>ФИО</th>
-                <th>Дата подачи</th>
-                <th>Дата обработки</th>
-                <th>Сумма</th>
-                <th>Статус</th>
-                <th>Действия</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for payouts_bank, payouts in payouts_data %}
-                <tr>
-                    <td>{{ payouts_bank.payout_id }}</td>
-                    <td>{{ payouts_bank.full_name }}</td>
-                    <td>{{ payouts.submission_date }}</td>
-                    <td>{{ payouts.processing_date }}</td>
-                    <td>{{ payouts.amount }}</td>
-                    <td>
-                      {% if payouts.status == 'в процессе' %}
-                        <span style="color: orange;">{{ payouts.status }}</span>
-                      {% elif payouts.status == 'оплачено' %}
-                        <span style="color: green;">{{ payouts.status }}</span>
-                      {% else %}
-                        <span>{{ payouts.status }}</span>
-                      {% endif %}
-                    </td>
-                    <td><a href="{{ url_for('payouts.show_payouts', payout_id=payouts.payout_id) }}">Подробнее</a></td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </div>
+
+
+<div class="row">
+                  <div class="col-md-12 grid-margin stretch-card">
+                    <div class="card">
+                      <div class="card-body"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+
+                    <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>ФИО</th>
+                        <th>Дата подачи</th>
+                        <th>Дата обработки</th>
+                        <th>Сумма</th>
+                        <th>Статус</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for payouts_bank, payouts in payouts_data %}
+                        <tr>
+                            <td>{{ payouts_bank.payout_id }}</td>
+                            <td>{{ payouts_bank.full_name }}</td>
+                            <td>{{ payouts.submission_date }}</td>
+                            <td>{{ payouts.processing_date }}</td>
+                            <td>{{ payouts.amount }}</td>
+                            <td>
+                              {% if payouts.status == 'в процессе' %}
+                                <span style="color: orange;">{{ payouts.status }}</span>
+                              {% elif payouts.status == 'оплачено' %}
+                                <span style="color: green;">{{ payouts.status }}</span>
+                              {% else %}
+                                <span>{{ payouts.status }}</span>
+                              {% endif %}
+                            </td>
+                            <td><a href="{{ url_for('payouts.show_payouts', payout_id=payouts.payout_id) }}">Подробнее</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+</div></div></div>
+</div>
+
 
 
 {% endblock %}

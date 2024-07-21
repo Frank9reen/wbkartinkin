@@ -24,26 +24,23 @@ class Rating(db.Model):
     k_rating = db.Column(db.Integer, nullable=False, default=1)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
 
-    @classmethod
-    def update_ratings(cls):  # не нужная функция
-        # Получаем все записи из таблицы Rating и сортируем их по убыванию
-        ratings = cls.query.order_by(cls.sum_money.desc()).all()  # например, можно сортировать по sum_money
-        # Обновляем поле rating для каждого пользователя, присваивая порядковый номер
-        for index, user_rating in enumerate(ratings, start=1):
-            user_rating.rating = index  # Присваиваем порядковый номер
-            db.session.add(user_rating)  # Добавляем изменения в сессию
-        db.session.commit()  # Сохраняем изменения в БД
+    # @classmethod
+    # def update_ratings(cls):  # не нужная функция
+    #     # Получаем все записи из таблицы Rating и сортируем их по убыванию
+    #     ratings = cls.query.order_by(cls.sum_money.desc()).all()  # например, можно сортировать по sum_money
+    #     # Обновляем поле rating для каждого пользователя, присваивая порядковый номер
+    #     for index, user_rating in enumerate(ratings, start=1):
+    #         user_rating.rating = index  # Присваиваем порядковый номер
+    #         db.session.add(user_rating)  # Добавляем изменения в сессию
+    #     db.session.commit()  # Сохраняем изменения в БД
 
     @classmethod
-    def check_max_sum_cards(cls, user_id):  # no work - may be delete
-        # Получаем текущее значение sum_cards для пользователя
+    def check_max_sum_cards(cls, user_id):
         current_rating = cls.query.filter_by(user_id=user_id).first()
         if not current_rating:
             return ""
-        # Получаем максимальное значение sum_cards среди всех записей
         max_sum_cards = cls.query.with_entities(db.func.max(cls.sum_cards)).scalar()
-        # Проверяем, является ли текущее значение sum_cards максимальным
-        if current_rating.sum_cards == max_sum_cards:
+        if current_rating.sum_cards == max_sum_cards and current_rating.sum_cards != 0:
             return 'max среди всех'
         else:
             return ""
@@ -164,14 +161,14 @@ class Post(db.Model):
         return cls.query.filter(Post.post_status.in_(statuses)).all()
 
 
-class Wallet(db.Model):
-    __tablename__ = 'wallet'
-    wallet_id = db.Column(db.Integer, primary_key=True)
-    balance = db.Column(db.Numeric(10, 2), default=0)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
-
-    def get_card_number(self):
-        return self.card_number
+# class Wallet(db.Model):
+#     __tablename__ = 'wallet'
+#     wallet_id = db.Column(db.Integer, primary_key=True)
+#     balance = db.Column(db.Numeric(10, 2), default=0)
+#     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
+#
+#     def get_card_number(self):
+#         return self.card_number
 
 
 class Comments(db.Model):

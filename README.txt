@@ -28,6 +28,8 @@ https://coder-folder.com/posts/229/deploi-prilozheniia-flask-uwsgi-docker-nginx-
 https://coder-folder.com/posts/182/deploi-flask-prilozheniia-na-server-linux
 
 Задачи:
+- /superadmin - при переходе /get_sttings выходит
+- /не та главная картинка добавляется на WB после публикации
 - /models вынести Role как отдельную таблицу
 - /rating сравнение с предыдущей неделей и изменение в int рейтинга (-9) и также с КТ
 - /admin добавить круговую диаграмму или график столбчатый на главную страницу
@@ -69,8 +71,10 @@ https://coder-folder.com/posts/182/deploi-flask-prilozheniia-na-server-linux
 - /status можно градиентом сделать статусы как в шаблоне bootstrap
 
 ---done---
+21.07
+- поправил отображение превьюшек в post/edit
 19.07
-- добавил сортировку и вывод рейтинга на сттраинцах
+- добавил сортировку и вывод рейтинга на страницах
 - настроить обновление через гит на бегете
 - установка окружения gg
 - лучше все пароли из settings убрать в .env и gitignore поставить игнор

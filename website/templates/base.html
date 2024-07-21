@@ -70,30 +70,23 @@ text-align: center;
 
 </li>
 <!--    end logo-->
+
 <li class="nav-item">
+      <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Привет, {{ session.get('username') }}</button>
+      <div class="dropdown-menu" style="">
+            <a class="dropdown-item" href="/get_settings">Настройки</a>
+            <a class="dropdown-item" href="#">Помощь</a>
+            <a class="dropdown-item" href="/logout">Выход</a>
+      </div>
 
-                        <div class="input-group-prepend">
-                          <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Привет, {{ session.get('username') }}</button>
-                          <div class="dropdown-menu" style="">
-                            <a class="dropdown-item" href="/get_settings">Настройки</a>
-                            <a class="dropdown-item" href="/logout">Выход</a>
-<!--                            <div role="separator" class="dropdown-divider"></div>-->
-<!--                            <a class="dropdown-item" href="/logout">Выход</a>-->
-                          </div>
-                        </div>
-    <br>
+</li>
 
 
-<!--<div class="border-bottom d-flex align-items-center">-->
-<!--  <a  href="/settings" ><h6 class="font-weight-normal ">Привет, {{ session.get('username') }}</h6>-->
-<!--    </a>-->
-<!--</div>-->
-
-
-<a class="nav-link" href="/admin">
-<span class="menu-title">Дашборд</span>
-<i class="mdi mdi-home menu-icon"></i>
-</a>
+<li class="nav-item">
+            <a class="nav-link" href="/admin">
+            <span class="menu-title">Дашборд</span>
+            <i class="mdi mdi-home menu-icon"></i>
+            </a>
 </li>
 
 <li class="nav-item">
