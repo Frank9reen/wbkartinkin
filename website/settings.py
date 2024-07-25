@@ -4,7 +4,6 @@ from dotenv import load_dotenv
 basedir = os.path.abspath(os.path.dirname(__name__))
 load_dotenv(os.path.join(basedir, '.env'))
 
-
 SECRET_KEY = os.urandom(36)
 # SQLALCHEMY_DATABASE_URI = 'mysql://db2:*O3eJ&6wiDnc@guefoogekik.beget.app/db2'  work
 # SQLALCHEMY_DATABASE_URI = 'mysql://root:020188@localhost/db2'  # подключение к MySQL через SQLAlchemy
@@ -19,13 +18,16 @@ MAIL_PORT = 465
 MAIL_USE_TLS = False
 MAIL_USE_SSL = True
 MAIL_USERNAME = 'heroesprint@yandex.ru'
-MAIL_PASSWORD = 'qauleebdqyygazkv'
+MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
+# MAIL_PASSWORD = 'qauleebdqyygazkv'
 
 basedir = os.path.abspath(os.path.dirname(__name__))
-UPLOAD_FOLDER = os.path.join('website', 'static', 'uploads')  # для сохранения картинки используется в папку
+UPLOAD_FOLDER = os.path.join('website', 'static', 'uploads')
 
 # heroes print
-API_stat = 'eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjQwMjI2djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTcyNjM0NTQzNywiaWQiOiIwMGRiNGY1ZS00MmVhLTQ0MDUtOTA3My1iZTI3YjYzYTVhNzYiLCJpaWQiOjI5NjE1NDE1LCJvaWQiOjczMDY2OCwicyI6Miwic2lkIjoiNTUwMGU5ZWItOTgwYy00YjkyLWFhYTQtZTI5Zjg3NDNiNjE0IiwidCI6ZmFsc2UsInVpZCI6Mjk2MTU0MTV9.c48Q8Itn6j7bpEpJn37SCthtmqVZHMVtVguLFO9yrbGaCwJ_p8kXoofJMsW0nS2BJk8xcWe0QyodtRXRXQMviw'
+API_stat = os.environ.get('API_stat')
+# API_stat = 'eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjQwMjI2djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTcyNjM0NTQzNywiaWQiOiIwMGRiNGY1ZS00MmVhLTQ0MDUtOTA3My1iZTI3YjYzYTVhNzYiLCJpaWQiOjI5NjE1NDE1LCJvaWQiOjczMDY2OCwicyI6Miwic2lkIjoiNTUwMGU5ZWItOTgwYy00YjkyLWFhYTQtZTI5Zjg3NDNiNjE0IiwidCI6ZmFsc2UsInVpZCI6Mjk2MTU0MTV9.c48Q8Itn6j7bpEpJn37SCthtmqVZHMVtVguLFO9yrbGaCwJ_p8kXoofJMsW0nS2BJk8xcWe0QyodtRXRXQMviw'
 
 # Ya.Disk
-YADISK_TOKEN = 'y0_AgAAAAB2MMm-AAwWlQAAAAEKJb9SAAAahHB98ExJLbZtFW_ppmbOnp8zDw'
+YADISK_TOKEN = os.environ.get('YADISK_TOKEN')
+# YADISK_TOKEN = 'y0_AgAAAAB2MMm-AAwWlQAAAAEKJb9SAAAahHB98ExJLbZtFW_ppmbOnp8zDw'

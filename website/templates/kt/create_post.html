@@ -25,11 +25,11 @@
                       <div class="card-body"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
                           <form action="/create_post" method="POST" enctype="multipart/form-data" id="postForm">
                             <label for="title">Наименование</label><br>
-                            <input type="text" id="title" name="title" class="form-control" placeholder="Кружка с медведем" style="width: 300px;" maxlength="59" required oninput="checkLength('title', 59)" >
+                            <input type="text" id="title" name="title" class="form-control" placeholder="Кружка с медведем" style="width: 350px;" maxlength="59" required oninput="checkLength('title', 59)" >
                             <span id="titleCount" style="font-size: 12px;"></span><br><br>
 
                             <label for="content">Описание</label><br>
-                            <textarea id="content" name="content" style="width: 300px; height: 100px;" maxlength="1500" class="form-control" placeholder="Удобная кружка с принтом медведь, играющий на балалайке на день рождения" oninput="checkLength('content', 1500)"></textarea>
+                            <textarea id="content" name="content" style="width: 350px; height: 100px;" maxlength="1500" class="form-control" placeholder="Удобная кружка с принтом медведь, играющий на балалайке на день рождения" oninput="checkLength('content', 1500)"></textarea>
                             <span id="contentCount" style="font-size: 12px;"></span><br><br>
 
                             {% if errors %}
@@ -71,19 +71,20 @@
                           <h4 class="card-title">Инструкция <i class="mdi mdi-alert-circle-outline icon-sm text-primary align-middle"></i></h4>
                     <ul class="list-arrow">
                         Заголовок
-                        <li>указывайте ключевые слова принта </li>
+                        <li>указывайте ключевые слова принта</li>
                         <br>
                         Описание
-                      <li>заполняйте более подробно</li>
+                      <li>заполняйте более подробно с описанием что находится на картинке</li>
                         <br>
-                      Исходное изображение:
+                      Исходное изображение - используется в производстве
                       <li>должно быть с высоким разрешением > 300dpi </li>
                       <li>размерами 20 см на 30 см</li>
                         <br>
-                        Мокапы
+                        Мокапы - выкладываются на WB
                       <li>не более 5 штук</li>
                         <li>размеры 700 на 900 пикселей</li>
                         <li>не более 10 Мб для каждой картинки</li>
+                        <li>названия мокапов называть: 1-pic, 2-pic, 3-pic, 4-pic, 5-pic. Так они будут отправлены на WB</li>
                     </ul>
 
 

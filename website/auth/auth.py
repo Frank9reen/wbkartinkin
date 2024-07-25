@@ -63,7 +63,7 @@ def login():
 
             return redirect(url_for('views.admin'))  # Пользователь существует и пароль верен
         else:
-            error = 'Неправильный email или пароль. Попробуйте еще раз.'
+            error = 'Неправильный email или пароль. Попробуйте еще раз'
             return render_template('auth/login.html', error=error)
     else:
         return render_template('auth/login.html')
@@ -90,7 +90,7 @@ def forgot_password():
             mail = current_app.extensions['mail']
             mail.send(msg)
             return render_template('auth/password_reset_email_sent.html')
-        error = 'Пользователь с таким email не найден.'
+        error = 'Пользователь с таким email не найден'
         return render_template('auth/forgot_password.html', error=error)
     else:
         return render_template('auth/forgot_password.html')

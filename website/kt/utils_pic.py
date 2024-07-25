@@ -1,7 +1,6 @@
-from PIL import Image
 import os
-import re
-from io import BytesIO
+
+from PIL import Image
 
 
 def check_if_image(filename):
@@ -86,7 +85,6 @@ def check_image_validity(file_path: str) -> (bool, list):
 
 def check_file_size(image_url_list: list):
     max_file_size = 10 * 1024 * 1024  # Максимально допустимый размер файла (10 МБ)
-
     errors = []
     for image_url in image_url_list:
         try:
@@ -96,7 +94,6 @@ def check_file_size(image_url_list: list):
                 errors.append(f"Ошибка: Размер файла {file_name} превышает 10 МБ")
         except FileNotFoundError:
             errors.append(f"Ошибка: Файл по пути не найден")
-
     if errors:
         return False, errors
     else:
@@ -115,6 +112,22 @@ def check_if_images(image_url_list: list):
         return True, None
 
 
+def check_name_images(image_url_list: list):
+    print(image_url_list, '123')
+    errors = []
+    required_images = ['1-pic', '2-pic', '3-pic', '4-pic', '5-pic']
+    missing_images = [img for img in required_images if img not in image_url_list]
+    if missing_images:
+        errors.append(f"Ошибка: Мокапы названы не правильно. Надо в формате 1-pic, 2-pic итд.")
+
+    if errors:
+        return False, errors
+    else:
+        return True, None
+
+
+
+
 def check_images_validity(image_url_list: list) -> (bool, list):
     errors = []
 
@@ -126,6 +139,11 @@ def check_images_validity(image_url_list: list) -> (bool, list):
     valid, error = check_file_size(image_url_list)
     if not valid:
         errors.extend(error)
+
+    valid, error = check_name_images(image_url_list)
+    if not valid:
+        errors.extend(error)
+        return False, errors
 
     if len(image_url_list) > 5:
         errors.append(f"Ошибка: Вы пытаетесь загрузить {len(image_url_list)} мокапов. Разрешено не более 5 мокапов.")

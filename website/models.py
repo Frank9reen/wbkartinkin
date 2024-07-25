@@ -171,6 +171,22 @@ class Post(db.Model):
 #         return self.card_number
 
 
+class AdminComments(db.Model):
+    __tablename__ = 'admincomments'
+    acomment_id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text)
+    post_id = db.Column(db.Integer, db.ForeignKey('post.post_id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
+    comment_date = db.Column(db.DateTime, default=datetime.now, nullable=False)
+
+    @classmethod
+    def add_comment(cls, content, post_id, user_id):
+        name_content = content
+        new_comment = AdminComments(content=name_content, post_id=post_id, user_id=user_id)
+        db.session.add(new_comment)
+        db.session.commit()
+
+
 class Comments(db.Model):
     __tablename__ = 'comments'
     comment_id = db.Column(db.Integer, primary_key=True)
@@ -188,12 +204,12 @@ class Comments(db.Model):
         db.session.commit()
 
     # Метод для удаления комментария
-    def delete_comment(self):
+    def delete_comment(self):  # используется - вроде нет?
         db.session.delete(self)
         db.session.commit()
 
     # Метод для изменения комментария
-    def edit_comment(self, new_content):
+    def edit_comment(self, new_content):  # используется - вроде нет?
         self.content = new_content
         db.session.commit()
 
@@ -257,7 +273,12 @@ class Image(db.Model):  # все методы рабочие
 
     @staticmethod
     def get_image_urls_for_post(post_id):
-        image_urls = Image.query.filter_by(post_id=post_id).with_entities(Image.image_url).all()
+        image_urls = (
+            Image.query.filter_by(post_id=post_id)
+            .order_by(Image.image_order)  # Сортировка по image_order
+            .with_entities(Image.image_url)
+            .all()
+        )
         cleaned_urls = [url[0].replace('static/', '').replace('\\', '/') for url in image_urls]
         return cleaned_urls
 

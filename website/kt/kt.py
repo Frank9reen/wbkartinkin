@@ -9,14 +9,14 @@ from werkzeug.utils import secure_filename
 from .. import db
 from ..auth.utils_auth import login_required
 from ..kt.utils_pic import check_image_validity, check_images_validity, remove_files_in_folder
-from ..models import Post, Image, Comments, WbPost
+from ..models import Post, Image, Comments, WbPost, AdminComments
 from ..settings import UPLOAD_FOLDER
 from ..status.utils_status import change_moderate
 
 kt = Blueprint('kt', __name__)
 
 
-@kt.route('/post/<int:post_id>', methods=['GET', 'POST'])  # не выпадают меню
+@kt.route('/post/<int:post_id>', methods=['GET', 'POST'])
 # @login_required
 def show_post(post_id):
     errors = []
@@ -27,13 +27,14 @@ def show_post(post_id):
     image_urls = Image.get_image_urls_for_post(post_id)  # загрузка постов
     user_role = session.get('user_role')
     comments = Comments.query.filter_by(post_id=post_id).all()
+    acomments = AdminComments.query.filter_by(post_id=post_id).all()
     wbpost = WbPost.query.filter_by(post_id=post_id).first()
 
     #  проваливаемся в страницу / как-то это прибрать лучше
     if user_role == 'admin' and post.post_status in ["на модерации", "отклонено", "опубликовано"]:  # если у нас админ
-        return render_template('kt/post-admin-wb.html', post=post, image_urls=image_urls, comments=comments, wbpost=wbpost)
+        return render_template('kt/post-admin-wb.html', post=post, image_urls=image_urls, comments=comments, wbpost=wbpost, acomments=acomments)
     if user_role == 'user' and post.post_status in ["на модерации", "опубликовано", "заархивировано"]:  # если НЕ админ
-        return render_template('kt/post-wb.html', post=post, image_urls=image_urls, comments=comments, wbpost=wbpost)
+        return render_template('kt/post-wb.html', post=post, image_urls=image_urls, comments=comments, wbpost=wbpost, acomments=acomments)
 
     if request.method == 'POST':
         if 'edit_image' in request.form:
@@ -63,10 +64,10 @@ def show_post(post_id):
 
                 Image.add_images_and_urls(user_id, post_id, 0, image_file)  # функция сохранения урла и картинки
                 image_urls = Image.get_image_urls_for_post(post_id)
-                return render_template('kt/post.html', post=post, post_id=post_id, image_urls=image_urls, comments=comments, message='Исходная картинка обновлена')
+                return render_template('kt/post.html', post=post, post_id=post_id, image_urls=image_urls, comments=comments, acomments=acomments, message='Исходная картинка обновлена')
             else:
                 os.remove(image_url)  # удаление если картинка не подходит по валидации
-                return render_template('kt/post.html', post=post, post_id=post_id, image_urls=image_urls, comments=comments, errors=errors)
+                return render_template('kt/post.html', post=post, post_id=post_id, image_urls=image_urls, comments=comments, acomments=acomments, errors=errors)
 
         elif 'edit_multi_image' in request.form:
             image_files: list = request.files.getlist('multi_images')
@@ -121,9 +122,9 @@ def show_post(post_id):
                 remove_files_in_folder(source_directory)  # удалили temp с мокапами
 
                 image_urls = Image.get_image_urls_for_post(post_id)
-                return render_template('kt/post.html', post=post, post_id=post_id, image_urls=image_urls, comments=comments, message='Мокапы обновлены')
+                return render_template('kt/post.html', post=post, post_id=post_id, image_urls=image_urls, comments=comments, acomments=acomments, message='Мокапы обновлены')
             else:
-                return render_template('kt/post.html', post=post, post_id=post_id, image_urls=image_urls, comments=comments, errors=errors)
+                return render_template('kt/post.html', post=post, post_id=post_id, image_urls=image_urls, comments=comments, acomments=acomments, errors=errors)
 
         elif 'edit_title_content' in request.form:
             new_title = request.form['post_title']
@@ -132,9 +133,9 @@ def show_post(post_id):
             post.content = new_content
             db.session.commit()
             return render_template('kt/post.html', post=post, post_id=post_id, image_urls=image_urls, comments=comments,
-                                   message='Описание карточки товара изменено')
+                                   acomments=acomments, message='Описание карточки товара изменено')
 
-    return render_template('kt/post.html', post=post, post_id=post_id, image_urls=image_urls, comments=comments, errors=errors)
+    return render_template('kt/post.html', post=post, post_id=post_id, image_urls=image_urls, comments=comments, acomments=acomments, errors=errors)
 
 
 # это функция заметь !
@@ -254,6 +255,6 @@ def add_comment():
     comment_content = request.form.get('comment_text')
     post_id = request.form.get('post_id')  # Получаем post_id из формы
     user_id = session.get('user_id')
-    Comments.add_comment(comment_content, post_id, user_id)
+    AdminComments.add_comment(comment_content, post_id, user_id)
     flash('Комментарий к карточке товара добавлен')
     return redirect(url_for('kt.show_post', post_id=post_id))
