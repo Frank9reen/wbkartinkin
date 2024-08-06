@@ -9,7 +9,6 @@ from flask_caching import Cache
 
 from .utils_statistics import get_all_sales_user_per_day
 from .. import db
-from ..auth.utils_auth import login_required
 from ..models import Balance, User, Post
 
 statistics = Blueprint('statistics', __name__)
@@ -17,17 +16,15 @@ statistics = Blueprint('statistics', __name__)
 cache = Cache()
 
 
-# изменить названия роутов на более понятные / тут функция будет, а не роут
 # заполнение статистки ежедневно для всех пользователей по всем их КТ
-@statistics.route('/day_balance', methods=['GET', 'POST'])  # надо чтобы, включалась не по кнопке, а по времени в 00:00
-# @login_required
+@statistics.route('/day_balance', methods=['GET', 'POST'])  # надо чтобы, включалась не по кнопке /, а по времени в 00:00
 def day_balance():
     if request.method == 'POST':
         user_id = session.get('user_id')
         # получили все user_id авторов
         all_user_ids: list = [user.user_id for user in User.query.all()]
 
-        for user_id in all_user_ids:
+        for user_id in all_user_ids:  # зачем так получать список post_id???
             # для данного пользователя вернуть список post_id
             all_post_ids = [post.post_id for post in Post.query.filter_by(user_id=user_id).all()]
             if all_post_ids:
@@ -45,7 +42,6 @@ def day_balance():
 
 
 @statistics.route('/statistics', methods=['GET'])
-# @login_required
 def get_statistics():
     if request.method == 'GET':
         user_id = session.get('user_id')
@@ -67,4 +63,3 @@ def get_statistics():
             return render_template('statistics/statistics.html', balance_data_current_week=balance_data_current_week)
     else:
         return 'Ошибка: Недопустимый метод запроса'
-

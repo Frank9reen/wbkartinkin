@@ -72,7 +72,7 @@ def rating_user(user_id):
             'sum_cards': 0,
             'rating': 0
         }
-    return user_rating.sum_money, user_rating.sum_cards, user_rating.rating
+    return user_rating.sum_money, user_rating.sum_cards, user_rating.rating  # возврат на главной инфо
 
 
 @views.route('/admin', methods=['GET'])  # работа с админкой
@@ -84,9 +84,10 @@ def admin():
         sum_money, sum_cards, rating = rating_user(user_id)
         # check
         check_max_cards = Rating.check_max_sum_cards(user_id)
-        # вывод всех кт пользователя
+        # разница между карточками по неделям (или это лучше вообще в отдельную таблицу запулить и не вызывать)
+        difference_in_cards = Rating.difference_in_sum_cards(user_id)
 
-        return render_template('admin.html', posts_images=posts_with_images, posts=filtered_posts_sorted, page=page, selected_status=status, status_counts=status_counts, sum_money=sum_money, sum_cards=sum_cards, rating=rating, check_max_cards=check_max_cards)
+        return render_template('admin.html', posts_images=posts_with_images, posts=filtered_posts_sorted, page=page, selected_status=status, status_counts=status_counts, sum_money=sum_money, sum_cards=sum_cards, rating=rating, check_max_cards=check_max_cards, difference_in_cards=difference_in_cards)
     else:
         return redirect(url_for('views.index'))
 
@@ -145,10 +146,3 @@ def oferta():
 @views.route('/confident', methods=['GET'])
 def confident():
     return render_template('static_page/confident.html')
-
-
-@views.route('/rating', methods=['GET'])
-def rating():
-    current_user_id = session.get('user_id')
-    ratings = Rating.query.order_by(Rating.rating.asc()).all()
-    return render_template('rating/rating.html', ratings=ratings, current_user_id=current_user_id)

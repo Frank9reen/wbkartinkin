@@ -3,16 +3,15 @@
 {% block h1text %}Dashboard{% endblock %}
 {% block content %}
 
-//тут можно вставить видео приветственное//
 
 {% include 'static_page/dashboard-info.html' %}
 
 <div class="row">
-              <div class="col-12 grid-margin">
-                <div class="card">
-                  <div class="card-body">
-                    <h4>Карточки товаров с картинками</h4>
-                    <div class="table-responsive">
+  <div class="col-md-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h4>Карточки товаров с картинками</h4>
+        <div class="table-responsive">
 
                         <table class="table table-striped table-bordered">
                             <thead>
@@ -62,12 +61,12 @@
                             {% endif %}
 
 
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
 
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
 {% include 'static_page/image_selection.html' %}
 
 {% endblock %}

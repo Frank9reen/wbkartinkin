@@ -21,36 +21,32 @@
                 <div class="card">
                   <div class="card-body"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
 
+                      {{ graph_html | safe }}
 
-
-                                    <table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Рейтинг</th>
-            <th>Имя пользователя</th>
-            <th>Заработанные деньги</th>
-            <th>Количество карточек</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for rating in ratings %}
-        <tr class="{% if rating.user_id == current_user_id %}table-primary{% endif %}">
-            <td>{{ rating.rating }}</td>
-            <td>{{ rating.user.username }}</td>
-            <td>{{ rating.sum_money if rating.sum_money is not none else 0 }}</td>
-            <td>{{ rating.sum_cards if rating.sum_cards is not none else 0 }}</td>
-        </tr>
-        {% else %}
-        <tr>
-            <td colspan="4" class="text-center">Нет доступных данных</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
-
-
-
+                      <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Рейтинг</th>
+                                <th>Имя пользователя</th>
+                                <th>Заработанные деньги</th>
+                                <th>Количество карточек</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for rating in ratings %}
+                            <tr class="{% if rating.user_id == current_user_id %}table-primary{% endif %}">
+                                <td>{{ rating.rating }}</td>
+                                <td>{{ rating.user.username }}</td>
+                                <td>{{ rating.sum_money if rating.sum_money is not none else 0 }}</td>
+                                <td>{{ rating.sum_cards if rating.sum_cards is not none else 0 }}</td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="4" class="text-center">Нет доступных данных</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
 
 
                   </div>

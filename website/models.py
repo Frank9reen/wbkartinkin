@@ -1,5 +1,6 @@
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
+from sqlalchemy import and_
 
 import bcrypt
 
@@ -14,25 +15,45 @@ class Balance(db.Model):
     date = db.Column(db.DateTime, default=datetime.now, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))  # связь с таблицей пользователей
 
+    @classmethod
+    def create_balance(cls, day_balance, user_id):
+        """Создает и сохраняет новый баланс в базе данных."""
+        today = datetime.now().date()  # Получаем сегодняшнюю дату
+        existing_balance = cls.query.filter(and_(cls.user_id == user_id, cls.date >= today)).first()
+
+        if existing_balance:
+            # Если запись с сегодняшней датой уже существует, возвращаем её или сообщение
+            return existing_balance  # Либо можно вернуть None или сообщение о том, что запись уже существует
+
+        new_balance = cls(day_balance=day_balance, user_id=user_id)
+        db.session.add(new_balance)
+        db.session.commit()
+        return new_balance
+
 
 class Rating(db.Model):
     __tablename__ = 'rating'
     rating_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     sum_money = db.Column(db.Integer, nullable=True)
     sum_cards = db.Column(db.Integer, nullable=True)
-    rating = db.Column(db.Integer, nullable=False, index=True)  # индекс для более быстрого поиска
+    rating = db.Column(db.Integer, nullable=True, index=True)  # индекс для более быстрого поиска
     k_rating = db.Column(db.Integer, nullable=False, default=1)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
 
-    # @classmethod
-    # def update_ratings(cls):  # не нужная функция
-    #     # Получаем все записи из таблицы Rating и сортируем их по убыванию
-    #     ratings = cls.query.order_by(cls.sum_money.desc()).all()  # например, можно сортировать по sum_money
-    #     # Обновляем поле rating для каждого пользователя, присваивая порядковый номер
-    #     for index, user_rating in enumerate(ratings, start=1):
-    #         user_rating.rating = index  # Присваиваем порядковый номер
-    #         db.session.add(user_rating)  # Добавляем изменения в сессию
-    #     db.session.commit()  # Сохраняем изменения в БД
+    @classmethod
+    def update_sum_cards(cls, user_id):
+        # Получаем количество записей WbPost за последние 7 дней для указанного user_id
+        count = WbPost.count_user_posts_last_7_days(user_id)  # эта функция из WbPost
+        # Находим рейтинг пользователя
+        rating = cls.query.filter_by(user_id=user_id).first()
+        if rating:
+            rating.sum_cards = count  # Обновляем sum_cards
+            db.session.commit()  # Сохраняем изменения в базе данных
+        else:
+            # Если рейтинга нет, можно создать новый
+            rating = Rating(user_id=user_id, sum_cards=count)
+            db.session.add(rating)
+            db.session.commit()
 
     @classmethod
     def check_max_sum_cards(cls, user_id):
@@ -44,6 +65,59 @@ class Rating(db.Model):
             return 'max среди всех'
         else:
             return ""
+
+    @classmethod
+    def rank_ratings(cls):  # Получаем все записи рейтинга, отсортированные по sum_money
+        ratings = cls.query.order_by(cls.sum_money.desc()).all()
+        # Присваиваем ранг каждой записи
+        for index, rating in enumerate(ratings, start=1):
+            rating.rating = index
+        # Сохраняем изменения в базе данных
+        db.session.commit()
+
+    @classmethod
+    def update_sum_money_for_user(cls, user_id):
+        """Обновляет сумму money за последние 7 дней для указанного user_id"""
+        seven_days_ago = datetime.now() - timedelta(days=7)
+        total_money = db.session.query(db.func.sum(Balance.day_balance)).filter(
+            Balance.user_id == user_id,
+            Balance.date >= seven_days_ago
+        ).scalar() or 0  # Считаем сумму day_balance
+        rating = cls.query.filter_by(user_id=user_id).first()
+        if rating:
+            rating.sum_money = total_money  # Обновляем sum_money
+        else:
+            # Если рейтинга нет, можно создать новый
+            rating = Rating(user_id=user_id, sum_money=total_money)
+            db.session.add(rating)
+        db.session.commit()  # Сохраняем изменения в базе данных
+
+    @classmethod
+    def count_user_cards_in_period(cls, user_id, start_date, end_date):
+        """Считает количество карточек пользователя в заданном периоде."""
+        count = WbPost.query.filter(
+            WbPost.user_id == user_id,
+            WbPost.create_date >= start_date,
+            WbPost.create_date < end_date
+        ).count()  # Предполагается, что у WbPost есть поле date
+        return count
+
+    @classmethod
+    def difference_in_sum_cards(cls, user_id):
+        """Находит разницу между количеством карточек в течение последних 7 дней и предыдущих 7 дней."""
+        today = datetime.now()
+        # Период для последних 7 дней
+        start_last_7_days = today - timedelta(days=7)
+        end_last_7_days = today
+        # Период для предыдущих 7 дней
+        start_previous_7_days = today - timedelta(days=14)
+        end_previous_7_days = today - timedelta(days=7)
+        # Получаем количество карточек за оба периода
+        last_7_days_count = cls.count_user_cards_in_period(user_id, start_last_7_days, end_last_7_days)
+        previous_7_days_count = cls.count_user_cards_in_period(user_id, start_previous_7_days, end_previous_7_days)
+        # Вычисляем разницу
+        difference = last_7_days_count - previous_7_days_count
+        return difference
 
 
 class Payouts_bank(db.Model):  # изменить название на стиль верблюда
@@ -109,16 +183,25 @@ class WbPost(db.Model):
     __tablename__ = 'wbpost'
     wbpost_id = db.Column(db.Integer, primary_key=True)
     articul_wb = db.Column(db.String(50))
-    post_id = db.Column(db.Integer, db.ForeignKey('post.post_id'))
-    post = db.relationship('Post', backref='wb_associations')  # что это за связи такие?
+    articul = db.Column(db.String(50))  # Добавленный столбец
+    post_id = db.Column(db.Integer, db.ForeignKey('post.post_id'))  # зачем нужен?
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
+    create_date = db.Column(db.DateTime, default=datetime.now, nullable=False)
+    post = db.relationship('Post', backref='wb_associations')  # что это за связи?
 
     @classmethod
-    def set_articul_wb(cls, articul_value, post_id):
+    def set_articul_wb(cls, articul_wb, articul, post_id, user_id):
         post = Post.query.get(post_id)
         if post:
-            wbpost = WbPost(articul_wb=articul_value, post=post)
+            wbpost = WbPost(articul_wb=articul_wb, articul=articul, post=post, user_id=user_id)
             db.session.add(wbpost)
             db.session.commit()
+
+    @classmethod
+    def count_user_posts_last_7_days(cls, user_id):  # количество опубликованных КТ за 7 дней
+        seven_days_ago = datetime.now() - timedelta(days=7)  # Определяем дату 7 дней назад
+        # Подсчитываем количество записей для указанного user_id за последние 7 дней
+        return cls.query.filter(cls.user_id == user_id, cls.create_date >= seven_days_ago).count()
 
 
 class Post(db.Model):

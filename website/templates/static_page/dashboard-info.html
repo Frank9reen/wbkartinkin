@@ -3,10 +3,10 @@
                 <div class="card bg-gradient-danger card-img-holder text-white">
                   <div class="card-body">
                     <img src="static/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image">
-                    <h4 class="font-weight-normal mb-3">Заказов за неделю на сумму, ₽ <i class="mdi mdi-chart-line mdi-24px float-right"></i>
+                    <h4 class="font-weight-normal mb-3">Рейтинг среди всех авторов <i class="mdi mdi-rocket mdi-24px float-right"></i>
                     </h4>
-                    <h2 class="mb-5">{{ sum_money }}</h2>
-<!--                    <h6 class="card-text">Increased by 60%</h6>-->
+                    <h2 class="mb-5">{{ rating }}</h2>
+<!--                    <h6 class="card-text">increase</h6>-->
                   </div>
                 </div>
               </div>
@@ -14,13 +14,24 @@
                 <div class="card bg-gradient-info card-img-holder text-white">
                   <div class="card-body">
                     <img src="static/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image">
-                    <h4 class="font-weight-normal mb-3">Карточек товара сделано <i class="mdi mdi-bookmark-outline mdi-24px float-right"></i>
+                    <h4 class="font-weight-normal mb-3">Карточек товара сделано <i class="mdi mdi-cards-outline mdi-24px float-right"></i>
                     </h4>
                     <h2 class="mb-5">{{ sum_cards }}</h2>
-                    <h6 class="card-text">
-                    {% if check_max_cards %}
-                        <i class="mdi mdi-code-greater-than"></i>
-                    {% endif %}{{ check_max_cards }}</h6>
+                        <h6 class="card-text">
+                            <i class="mdi mdi-arrow-up"></i> Рост на {{ difference_in_cards }} за неделю
+                            {% if difference_in_cards > 0 %}
+
+                            {% elif difference_in_cards < 0 %}
+                            <i class="mdi mdi-arrow-down"></i>Падение на {{ difference_in_cards }} за неделю
+
+                            {% else %}
+                                <span>—</span>  <!-- Если разница равна нулю -->
+                            {% endif %}
+                        </h6>
+                        <h6 class="card-text">
+                        {% if check_max_cards %}
+                            <i class="mdi mdi-code-greater-than"></i>
+                        {% endif %}{{ check_max_cards }}</h6>
                   </div>
                 </div>
               </div>
@@ -28,9 +39,11 @@
                 <div class="card bg-gradient-success card-img-holder text-white">
                   <div class="card-body">
                     <img src="static/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image">
-                    <h4 class="font-weight-normal mb-3">Рейтинг среди всех авторов <i class="mdi mdi-rocket mdi-24px float-right"></i>
+                    <h4 class="font-weight-normal mb-3">Заказов за неделю на сумму, ₽ <i class="mdi mdi-chart-line mdi-24px float-right"></i>
                     </h4>
-                    <h2 class="mb-5">{{ rating }}</h2>
+                    <h2 class="mb-5">{{ sum_money }}</h2>
+
+
 <!--                    <h6 class="card-text">Increased by 5%</h6>-->
                   </div>
                 </div>

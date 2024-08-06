@@ -126,8 +126,6 @@ def check_name_images(image_url_list: list):
         return True, None
 
 
-
-
 def check_images_validity(image_url_list: list) -> (bool, list):
     errors = []
 
@@ -140,7 +138,7 @@ def check_images_validity(image_url_list: list) -> (bool, list):
     if not valid:
         errors.extend(error)
 
-    valid, error = check_name_images(image_url_list)
+    # valid, error = check_name_images(image_url_list)
     if not valid:
         errors.extend(error)
         return False, errors

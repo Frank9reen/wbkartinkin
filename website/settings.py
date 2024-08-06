@@ -31,3 +31,6 @@ API_stat = os.environ.get('API_stat')
 # Ya.Disk
 YADISK_TOKEN = os.environ.get('YADISK_TOKEN')
 # YADISK_TOKEN = 'y0_AgAAAAB2MMm-AAwWlQAAAAEKJb9SAAAahHB98ExJLbZtFW_ppmbOnp8zDw'
+
+# time update
+TIME_UPDATE = os.environ.get('TIME_UPDATE')

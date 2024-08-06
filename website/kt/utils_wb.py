@@ -173,10 +173,9 @@ def approve_kt(userid: str, postid: str):
         # articul_wb = articul_to_articul_wb(articul, take_list_nomenclatur_2())  # работает получение articul_wb
         articul_wb = take_list_nomenclatur_4(articul)  # тоже работает получение articul_wb
         # тут возможно нужно добавить создание
-        WbPost.set_articul_wb(articul_wb, postid)  # добавили ссылку на страницу на ВБ
+        WbPost.set_articul_wb(articul_wb, articul, postid, userid)  # добавили ссылку на страницу на ВБ и сам артикул!
 
         wb_kt_published(email, articul_wb)
-
     except Exception as ex:
         print(ex)
 
