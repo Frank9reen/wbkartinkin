@@ -23,10 +23,10 @@
         <option value="на модерации">На модерации ({{ status_counts['на модерации'] }})</option>
         <option value="опубликовано">Опубликовано ({{ status_counts['опубликовано'] }})</option>
         <option value="отклонено">Отклонено ({{ status_counts['отклонено'] }})</option>
+        <option value="заархивировано">Заархивировано ({{ status_counts['заархивировано'] }})</option>
     </select>
     <button type="submit" class="btn btn-sm btn-outline-primary">Фильтр</button>
-</form>
-                          <br>
+</form><br>
 <table class="table table-striped table-bordered">
   <thead>
     <tr>
@@ -53,6 +53,8 @@
             <span style="color: red;">{{ post.post_status }}</span>
           {% elif post.post_status == 'опубликовано' %}
             <span style="color: green;">{{ post.post_status }}</span>
+            {% elif post.post_status == 'заархивировано' %}
+            <span style="color: black;">{{ post.post_status }}</span>
           {% else %}
             <span>{{ post.post_status }}</span>
           {% endif %}

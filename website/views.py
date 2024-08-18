@@ -35,7 +35,7 @@ def post_with_images(user_id):
 
     # --
     posts = Post.get_all_posts()
-    posts_3status = Post.get_posts_by_status(['на модерации', 'опубликовано', 'отклонено', 'черновик'])
+    posts_3status = Post.get_posts_by_status(['на модерации', 'опубликовано', 'отклонено', 'черновик', 'заархивировано'])
     status = request.args.get('status', 'all')  # Получаем параметр "status" из URL
 
     status_counts = {
@@ -86,8 +86,9 @@ def admin():
         check_max_cards = Rating.check_max_sum_cards(user_id)
         # разница между карточками по неделям (или это лучше вообще в отдельную таблицу запулить и не вызывать)
         difference_in_cards = Rating.difference_in_sum_cards(user_id)
+        difference_in_money = Rating.difference_in_sum_money(user_id)
 
-        return render_template('admin.html', posts_images=posts_with_images, posts=filtered_posts_sorted, page=page, selected_status=status, status_counts=status_counts, sum_money=sum_money, sum_cards=sum_cards, rating=rating, check_max_cards=check_max_cards, difference_in_cards=difference_in_cards)
+        return render_template('admin.html', posts_images=posts_with_images, posts=filtered_posts_sorted, page=page, selected_status=status, status_counts=status_counts, sum_money=sum_money, sum_cards=sum_cards, rating=rating, check_max_cards=check_max_cards, difference_in_cards=difference_in_cards, difference_in_money=difference_in_money)
     else:
         return redirect(url_for('views.index'))
 
@@ -96,17 +97,19 @@ def admin():
 # @login_required
 def superadmin():
     posts = Post.get_all_posts()
-    posts_3status = Post.get_posts_by_status(['на модерации', 'опубликовано', 'отклонено'])
+    posts_3status = Post.get_posts_by_status(
+        ['на модерации', 'опубликовано', 'отклонено',  'заархивировано'])
+    status = request.args.get('status', 'all')  # Получаем параметр "status" из URL
 
-    # Подсчет количества постов с различными статусами
     status_counts = {
         'на модерации': len([post for post in posts if post.post_status == 'на модерации']),
         'опубликовано': len([post for post in posts if post.post_status == 'опубликовано']),
         'отклонено': len([post for post in posts if post.post_status == 'отклонено']),
         'заархивировано': len([post for post in posts if post.post_status == 'заархивировано'])
     }
-
     status = request.args.get('status', 'all')  # Получаем параметр "status" из URL
+    # Выводим отладочную информацию
+    print(f"Received status from URL: {status}")
 
     if status == 'на модерации':
         filtered_posts = [post for post in posts if post.post_status == 'на модерации']

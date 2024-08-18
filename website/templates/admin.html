@@ -35,8 +35,10 @@
                                             <span class="badge badge-gradient-danger">отклонено</span>
                                           {% elif post.post_status == 'опубликовано' %}
                                             <span class="badge badge-gradient-success">опубликовано</span>
-                                           {% elif post.post_status == 'отклонено' %}
+
+                                            {% elif post.post_status == 'отклонено' %}
                                             <span style="color: red;">{{ post.post_status }}</span>
+
                                             {% elif post.post_status == 'черновик' %}
                                             <span class="badge badge-gradient-gray">черновик</span>
                                              {% elif post.post_status == 'заархивировано' %}

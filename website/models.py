@@ -1,22 +1,80 @@
 import os
 from datetime import datetime, timedelta
-from sqlalchemy import and_
 
 import bcrypt
+from sqlalchemy import and_, func
 
 from . import db
 from .settings import UPLOAD_FOLDER
 
 
+class UserBalance(db.Model):
+    __tablename__ = 'userbalance'
+    userbalance_id = db.Column(db.Integer, primary_key=True, autoincrement=True)  # Убедитесь, что autoincrement=True
+    totalbalance = db.Column(db.Integer, nullable=True)  # сумма дохода по всем дням для user
+    curbalance = db.Column(db.Integer, nullable=True)  # разница между total_b - payouts_b
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
+
+    @classmethod
+    def update_user_balance(cls, user_id):
+        """Обновляет общее количество денег за все время для указанного user_id и записывает его в totalbalance"""
+        # 1 Получаем сумму всех дневных балансов для указанного user_id
+        total_money = db.session.query(func.sum(Balance.day_balance)).filter(
+            Balance.user_id == user_id
+        ).scalar() or 0
+
+        # 2 Получаем сумму БЕЗ холда для указанного user_id, которую можно вывести - не работает правильно тк нет записи
+        now = datetime.now()
+        cutoff_date = now - timedelta(days=1)  # поставить 7, 14 или 30 дней
+        total_money_without_hold = db.session.query(func.sum(Balance.day_balance)).filter(
+            Balance.user_id == user_id,
+            Balance.date < cutoff_date  # Предполагается, что поле date существует в модели Balance
+        ).scalar() or 0
+
+        # 3 суммируем все суммы выплат из модели Payouts для пользователя
+        total_withdraw = db.session.query(func.sum(Payouts.amount)).filter(
+            Payouts.user_id == user_id
+        ).scalar() or 0
+
+        # Текущий баланс - подсчитываем разницу между доходами без холда и выплатами
+        totalbalance = round(total_money - total_withdraw)
+        curbalance = round(total_money_without_hold - total_withdraw)
+
+        user_balance_record = cls.query.filter_by(user_id=user_id).first()
+        if user_balance_record:
+            user_balance_record.totalbalance = totalbalance  # Обновляем totalbalance
+            user_balance_record.curbalance = curbalance  # Обновляем curbalance
+        else:
+            user_balance_record = UserBalance(
+                user_id=user_id,
+                totalbalance=totalbalance,
+                curbalance=curbalance
+            )
+            db.session.add(user_balance_record)
+        db.session.commit()  # Сохраняем изменения в базе данных
+
+    @classmethod
+    def get_payouts_balance(cls, user_id):
+        """Возвращает payoutsbalance для указанного user_id"""
+        user_balance_record = cls.query.filter_by(user_id=user_id).first()
+        if user_balance_record:
+            return user_balance_record.curbalance
+        return None  # Или можно вернуть 0, если запись не найдена
+
+
 class Balance(db.Model):
     __tablename__ = 'balance'
-    balance_id = db.Column(db.Integer, primary_key=True, autoincrement=True)  # id в конце слова стоит всегда
+    balance_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     day_balance = db.Column(db.Float, nullable=False)  # суммарный баланс за день
     date = db.Column(db.DateTime, default=datetime.now, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))  # связь с таблицей пользователей
 
     @classmethod
     def create_balance(cls, day_balance, user_id):
+        if user_id is None:  # Если user_id равен None, запись не делается
+            print("User ID is None. Balance entry will not be created.")
+            return None
+
         """Создает и сохраняет новый баланс в базе данных."""
         today = datetime.now().date()  # Получаем сегодняшнюю дату
         existing_balance = cls.query.filter(and_(cls.user_id == user_id, cls.date >= today)).first()
@@ -31,7 +89,7 @@ class Balance(db.Model):
         return new_balance
 
 
-class Rating(db.Model):
+class Rating(db.Model):  # данные по рейтингу за неделю, сумма КТ за все время, а деньги за неделю (!)
     __tablename__ = 'rating'
     rating_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     sum_money = db.Column(db.Integer, nullable=True)
@@ -43,8 +101,8 @@ class Rating(db.Model):
     @classmethod
     def update_sum_cards(cls, user_id):
         # Получаем количество записей WbPost за последние 7 дней для указанного user_id
-        count = WbPost.count_user_posts_last_7_days(user_id)  # эта функция из WbPost
-        # Находим рейтинг пользователя
+        # count = WbPost.count_user_posts_last_7_days(user_id)  # эта функция из WbPost за 7 дней
+        count = WbPost.count_user_posts_all_time(user_id)  # за все время КТ сумма
         rating = cls.query.filter_by(user_id=user_id).first()
         if rating:
             rating.sum_cards = count  # Обновляем sum_cards
@@ -62,7 +120,7 @@ class Rating(db.Model):
             return ""
         max_sum_cards = cls.query.with_entities(db.func.max(cls.sum_cards)).scalar()
         if current_rating.sum_cards == max_sum_cards and current_rating.sum_cards != 0:
-            return 'max среди всех'
+            return 'max сделано карточек среди всех'
         else:
             return ""
 
@@ -78,7 +136,7 @@ class Rating(db.Model):
     @classmethod
     def update_sum_money_for_user(cls, user_id):
         """Обновляет сумму money за последние 7 дней для указанного user_id"""
-        seven_days_ago = datetime.now() - timedelta(days=7)
+        seven_days_ago = datetime.now() - timedelta(days=14)  # изменил! с 7 (оставить потом 7)!
         total_money = db.session.query(db.func.sum(Balance.day_balance)).filter(
             Balance.user_id == user_id,
             Balance.date >= seven_days_ago
@@ -119,6 +177,31 @@ class Rating(db.Model):
         difference = last_7_days_count - previous_7_days_count
         return difference
 
+    @classmethod
+    def difference_in_sum_money(cls, user_id):
+        """Находит разницу между доходом за последние 7 дней и предыдущими 7 днями."""
+        today = datetime.now()
+        # Период для последних 7 дней
+        start_last_7_days = today - timedelta(days=7)
+        end_last_7_days = today
+        # Период для предыдущих 7 дней
+        start_previous_7_days = today - timedelta(days=14)
+        end_previous_7_days = today - timedelta(days=7)
+        # Получаем сумму дохода за оба периода
+        last_7_days_income = db.session.query(db.func.sum(Balance.day_balance)).filter(
+            Balance.user_id == user_id,
+            Balance.date >= start_last_7_days,
+            Balance.date < end_last_7_days
+        ).scalar() or 0
+        previous_7_days_income = db.session.query(db.func.sum(Balance.day_balance)).filter(
+            Balance.user_id == user_id,
+            Balance.date >= start_previous_7_days,
+            Balance.date < end_previous_7_days
+        ).scalar() or 0
+        # Вычисляем разницу
+        difference = last_7_days_income - previous_7_days_income
+        return round(difference)
+
 
 class Payouts_bank(db.Model):  # изменить название на стиль верблюда
     __tablename__ = 'payouts_bank'
@@ -149,13 +232,6 @@ class Payouts(db.Model):
     def set_processing_date(self):
         self.processing_date = datetime.now().date()
         db.session.commit()
-
-
-# class RoleUser(db.Model):
-#     __tablename__ = 'roleuser'
-#     role_id = db.Column(db.Integer, primary_key=True)
-#     role_user = db.Column(db.String(50), unique=True, nullable=False)
-#     users = db.relationship('User', backref='role', lazy=True)
 
 
 class User(db.Model):
@@ -197,11 +273,16 @@ class WbPost(db.Model):
             db.session.add(wbpost)
             db.session.commit()
 
+    # @classmethod
+    # def count_user_posts_last_7_days(cls, user_id):  # количество опубликованных КТ за 7 дней
+    #     seven_days_ago = datetime.now() - timedelta(days=7)  # Определяем дату 7 дней назад
+    #     # Подсчитываем количество записей для указанного user_id за последние 7 дней
+    #     return cls.query.filter(cls.user_id == user_id, cls.create_date >= seven_days_ago).count()
+
     @classmethod
-    def count_user_posts_last_7_days(cls, user_id):  # количество опубликованных КТ за 7 дней
-        seven_days_ago = datetime.now() - timedelta(days=7)  # Определяем дату 7 дней назад
-        # Подсчитываем количество записей для указанного user_id за последние 7 дней
-        return cls.query.filter(cls.user_id == user_id, cls.create_date >= seven_days_ago).count()
+    def count_user_posts_all_time(cls, user_id):   # количество опубликованных КТ за все время
+        # Подсчитываем общее количество записей для указанного user_id
+        return cls.query.filter(cls.user_id == user_id).count()
 
 
 class Post(db.Model):
@@ -242,16 +323,6 @@ class Post(db.Model):
     @classmethod
     def get_posts_by_status(cls, statuses):
         return cls.query.filter(Post.post_status.in_(statuses)).all()
-
-
-# class Wallet(db.Model):
-#     __tablename__ = 'wallet'
-#     wallet_id = db.Column(db.Integer, primary_key=True)
-#     balance = db.Column(db.Numeric(10, 2), default=0)
-#     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
-#
-#     def get_card_number(self):
-#         return self.card_number
 
 
 class AdminComments(db.Model):
@@ -407,6 +478,3 @@ class Image(db.Model):  # все методы рабочие
                 return f"Ошибка при удалении изображений: {str(e)}"
         else:
             return f"Изображения для user_id={user_id} и post_id={post_id} не найдены для удаления."
-
-
-

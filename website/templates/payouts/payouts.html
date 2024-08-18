@@ -17,16 +17,21 @@
                 <div class="card">
                   <div class="card-body"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
 
-                    Проводим выплаты раз в месяц до 1 числа следующего месяца.
-                    Если нужна досрочная выплата - обратитесь в чат или к личному менеджеру.
-                    * - обязательные поля
-                    <br><br>
-                    <p>Доход за все время: -
-                        <br>
-                    Накопления: - ₽<br>
-                    Доступно к выводу: -₽ </p>
+                      {% with messages = get_flashed_messages() %}
+                          {% if messages %}
+                            <ul style="color: green;" class="list-arrow">
+                                {% for message in messages %}
+                                    <li>{{ message }}</li>
+                                {% endfor %}
+                                </ul>
+                          {% endif %}
+                        {% endwith %}
 
-                        <form action="/payouts_bank" method="post" style="background-color: #f4f4f4; padding: 20px; border-radius: 10px;">
+                      <p>Общий Баланс: <b>{{ balance_data['totalbalance'] }} ₽</b>
+                        <br>
+                    Доступно к выводу: <b>{{ balance_data['curbalance'] }} ₽</b> </p>
+
+                        <form action="/payouts_bank" method="post" >
                             <label for="full_name">Фамилия и имя, как на карте*</label><br>
                             <input type="text" id="full_name" name="full_name" required><br><br>
 
@@ -37,7 +42,12 @@
                             <input type="text" id="card_number" name="card_number" required maxlength="16" pattern="\d{16}" title="Введите 16 цифр в номере карты"><br><br>
 
                             <input type="submit" value="Отправить" class="btn btn-gradient-primary btn-fw">
+                            <br>* - обязательные поля
+
+
+
                         </form>
+
 
 </div></div></div></div>
 

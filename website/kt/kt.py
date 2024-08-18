@@ -30,8 +30,8 @@ def show_post(post_id):
     acomments = AdminComments.query.filter_by(post_id=post_id).all()
     wbpost = WbPost.query.filter_by(post_id=post_id).first()
 
-    #  проваливаемся в страницу / как-то это прибрать лучше
-    if user_role == 'admin' and post.post_status in ["на модерации", "отклонено", "опубликовано"]:  # если у нас админ
+    #  проваливаемся в страницу
+    if user_role == 'admin' and post.post_status in ["на модерации", "отклонено", "опубликовано", "заархивировано"]:  # если у нас админ
         return render_template('kt/post-admin-wb.html', post=post, image_urls=image_urls, comments=comments, wbpost=wbpost, acomments=acomments)
     if user_role == 'user' and post.post_status in ["на модерации", "опубликовано", "заархивировано"]:  # если НЕ админ
         return render_template('kt/post-wb.html', post=post, image_urls=image_urls, comments=comments, wbpost=wbpost, acomments=acomments)

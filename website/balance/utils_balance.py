@@ -8,8 +8,6 @@ from ..rating.utils_rating import get_all_sales_user_per_day
 import plotly.express as px
 
 
-
-
 # добавить срабатывание по таймеру КАЖДЫЙ ДЕНЬ в 00-00 для записи в таблицу Balance
 # надо добавить в Balance функцию для записи дневных доходов для ВСЕХ пользователе по ВСЕМ карточкам
 #  поставить срабатывание по таймеру

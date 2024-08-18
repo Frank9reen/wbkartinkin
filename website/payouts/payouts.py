@@ -2,16 +2,13 @@ import datetime
 
 import pandas as pd
 from flask import Blueprint
-from flask import render_template, request
-from flask import session, redirect, url_for
-from flask_caching import Cache
+from flask import render_template, request, session, redirect, url_for, flash
 from sqlalchemy import func
 
 from .. import db
-from ..auth.utils_auth import login_required
-from ..models import Payouts, Payouts_bank
+from ..models import Payouts, Payouts_bank, UserBalance
 
-cache = Cache()
+# cache = Cache()
 
 payouts = Blueprint('payouts', __name__)
 
@@ -36,26 +33,50 @@ def payouts_func():
 
         df = df.fillna('')
         df = df.sort_values(by='ID заявки', ascending=False)
-        return render_template('payouts/payouts.html', payouts_data=df.to_html(classes='payout-table-css', index=False))
+
+        # обновить таблицу
+        UserBalance.update_user_balance(user_id)  # добавил для исправления обнуления при выводе сумму
+
+        # Запрос данных из UserBalance
+        user_balance = db.session.query(
+            UserBalance.totalbalance, UserBalance.curbalance
+        ).filter(UserBalance.user_id == user_id).first()
+
+        # Проверка наличия записи в UserBalance
+        if user_balance:
+            balance_data = {
+                'totalbalance': user_balance.totalbalance,
+                'curbalance': user_balance.curbalance
+            }
+        else:
+            balance_data = {
+                'totalbalance': 'Информация отсутствует',
+                'curbalance': 'Информация отсутствует'
+            }
+
+        return render_template('payouts/payouts.html', payouts_data=df.to_html(classes='payout-table-css', index=False), balance_data=balance_data)
     else:
         return "Ошибка: 'user_id' отсутствует в сессии."
 
 
-@payouts.route('/payouts_bank', methods=['POST'])
+@payouts.route('/payouts_bank', methods=['POST'])  # отправка заявки на выплату
 # @login_required
 def submit_form():
+    user_id = session.get('user_id')
     full_name = request.form['full_name']
     phone_number = request.form['phone_number']
     card_number = request.form['card_number']
-
-    # Получение даты подачи для ассоциированной записи в таблице Payouts
-    submission_date = datetime.date.today()
+    recipient = f'*** {card_number[-4:]}'
+    submission_date = datetime.date.today()  # Получение даты подачи для записи в таблице Payouts
+    # получение суммы для вывода payoutsbalance из UserBalance
+    payouts_balance = UserBalance.get_payouts_balance(user_id)
 
     if 'user_id' in session:
-        user_id = session.get('user_id')
-
+        if payouts_balance <= 0:
+            flash('Ошибка: недостаточно средств для вывода.')
+            return redirect(url_for('payouts.payouts_func'))
         # Создание новой записи в таблице Payouts с учетом user_id
-        new_payout = Payouts(submission_date=submission_date, payout_type='Банк. карта', status='в обработке', user_id=user_id)
+        new_payout = Payouts(submission_date=submission_date, payout_type='Банк. карта', amount=payouts_balance, recipient=recipient, status='в обработке', user_id=user_id)
         db.session.add(new_payout)
         db.session.commit()
 
@@ -67,7 +88,9 @@ def submit_form():
         db.session.add(new_payout_bank)
         db.session.commit()
 
-        return render_template('payouts/payouts.html')
+        flash('Заявка на выплату отправлена')
+
+        return redirect(url_for('payouts.payouts_func'))
     else:
         return "Ошибка: 'user_id' отсутствует в сессии."
 
