@@ -33,3 +33,6 @@ YADISK_TOKEN = os.environ.get('YADISK_TOKEN')
 
 # time update
 TIME_UPDATE = os.environ.get('TIME_UPDATE')
+
+# user royalty %
+USER_ROYALTY = 0.05

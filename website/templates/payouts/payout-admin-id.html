@@ -1,78 +1,80 @@
 {% extends 'base-admin.html' %}
-
 {% block title %}Панель администрирования{% endblock %}
 
 {% block content %}
 <div class="page-header">
-              <h3 class="page-title">
-                <span class="page-title-icon bg-gradient-primary text-white me-2">
-                  <i class="mdi mdi-cards"></i>
-                </span> Детали заявки на выплату
-              </h3>
-            </div>
-
-
+    <h3 class="page-title">
+        <span class="page-title-icon bg-gradient-primary text-white me-2">
+            <i class="mdi mdi-cards"></i>
+        </span>
+        Детали заявки на выплату
+    </h3>
+</div>
 
 <div class="row">
-                  <div class="col-md-12 grid-margin stretch-card">
-                    <div class="card">
-                      <div class="card-body"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="chartjs-size-monitor">
+                    <div class="chartjs-size-monitor-expand">
+                        <div class=""></div>
+                    </div>
+                    <div class="chartjs-size-monitor-shrink">
+                        <div class=""></div>
+                    </div>
+                </div>
 
+                <table class="table table-bordered">
+                    <tr>
+                        <th>ФИО</th>
+                        <td>{{ combined_info.full_name }}</td>
+                    </tr>
+                    <tr>
+                        <th>Номер телефона</th>
+                        <td>{{ combined_info.phone_number }}</td>
+                    </tr>
+                    <tr>
+                        <th>Номер карты</th>
+                        <td>{{ combined_info.card_number }}</td>
+                    </tr>
+                    <tr>
+                        <th>Дата подачи</th>
+                        <td>{{ combined_info.submission_date }}</td>
+                    </tr>
+                    <tr>
+                        <th>Дата обработки</th>
+                        <td>{{ combined_info.processing_date }}</td>
+                    </tr>
+                    <tr>
+                        <th>Тип выплаты</th>
+                        <td>{{ combined_info.payout_type }}</td>
+                    </tr>
+                    <tr>
+                        <th>Статус</th>
+                        <td>
+                            {% if combined_info.status == 'оплачено' %}
+                                <span class="badge badge-success">{{ combined_info.status }}</span>
+                            {% elif combined_info.status == 'в процессе' %}
+                                <span class="badge badge-warning">{{ combined_info.status }}</span>
+                            {% else %}
+                                Статус: {{ combined_info.status }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Сумма</th>
+                        <td><strong>{{ combined_info.amount }}</strong></td>
+                    </tr>
+                </table>
+                <br>
 
-    <table class="table table-bordered">
-    <tr>
-        <th>ФИО</th>
-        <td>{{ combined_info.full_name }}</td>
-    </tr>
-    <tr>
-        <th>Номер телефона</th>
-        <td>{{ combined_info.phone_number }}</td>
-    </tr>
-    <tr>
-        <th>Номер карты</th>
-        <td>{{ combined_info.card_number }}</td>
-    </tr>
-    <tr>
-        <th>Дата подачи</th>
-        <td>{{ combined_info.submission_date }}</td>
-    </tr>
-    <tr>
-        <th>Дата обработки</th>
-        <td>{{ combined_info.processing_date }}</td>
-    </tr>
-    <tr>
-        <th>Тип выплаты</th>
-        <td>{{ combined_info.payout_type }}</td>
-    </tr>
-    <tr>
-        <th>Статус</th>
-        <td>
-            {% if  combined_info.status == 'оплачено' %}
-            <span class="badge badge-success">{{  combined_info.status }}</span>
-            {% elif combined_info.status == 'в процессе' %}
-                <span class="badge badge-warning">{{ combined_info.status }}</span>
-            {% else %}
-                Статус: {{ combined_info.status }}
-            {% endif %}
-        </td>
-
-    </tr>
-    <tr>
-        <th>Сумма</th>
-        <td><strong>{{ combined_info.amount }}</strong></td>
-    </tr>
-</table>
-<br>
-
-
-{% if combined_info.status != 'оплачено' %}
-    <form action="/payouts/{{ combined_info.payout_id }}/approve" method="post">
-        <button type="submit" class="btn btn-success">Оплату сделали</button>
-    </form>
-{% endif %}
-
-
-     </div> </div></div></div>
-
-
+                {% if combined_info.status != 'оплачено' %}
+                    <form action="/payouts/{{ combined_info.payout_id }}/approve" method="post">
+                        <button type="submit" class="btn btn-success">Оплату сделали</button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

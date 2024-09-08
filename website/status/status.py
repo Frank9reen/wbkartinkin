@@ -4,7 +4,7 @@ from flask import session, redirect, url_for
 
 from .. import db
 from ..kt.utils_wb import approve_kt
-from ..models import Post, Image, Comments
+from ..models import Post, Image, Comments, Balance
 from ..kt.yadisk import yadisk_upload_kartinka
 
 status = Blueprint('status', __name__)
@@ -63,11 +63,12 @@ def approve_post(post_id):
         # Добавим комментарий к посту
         comment_text = 'Опубликовно на ВБ'
         Comments.add_comment(comment_text, post_id, user_id)
-
-
-        approve_kt(post.user_id, post_id)  # выполнение функции создания КТ и заливки картинок на ВБ
+        # выполнение функции создания КТ и заливки картинок на ВБ
+        approve_kt(post.user_id, post_id)
+        # добавление картинки в Ya.disk
         yadisk_upload_kartinka(f'website/static/{post.user_id}/{post.user_id}-{post_id}/{post.user_id}-{post_id}.png')
-
+        # добавление 50 руб. в баланс day_balance в Balance
+        Balance.add_50_to_balance(user_id)
         return redirect(url_for('views.superadmin'))
     return 'Post do not find'
 

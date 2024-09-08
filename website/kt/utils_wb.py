@@ -3,6 +3,7 @@ import time
 
 import pandas as pd
 import requests
+
 from ..message.message import wb_kt_published
 from ..models import WbPost, User
 from ..settings import API_stat
@@ -135,9 +136,9 @@ def take_list_nomenclatur_4(articul: str):
     }
     response = requests.post('https://suppliers-api.wildberries.ru/content/v2/get/cards/list', json=params, headers=headers)
     response_data = response.json()
-    print(response_data, '4')
+    # print(response_data, '4')
     nmID_value = response_data['cursor']['nmID']
-    print(nmID_value)
+    # print(nmID_value)
     return nmID_value
 
 
@@ -160,7 +161,7 @@ def paste_images_in_card_wb(userid: str, postid: str, articul_wb: str, file: str
     return
 
 
-def approve_kt(userid: str, postid: str):
+def approve_kt(userid: str, postid: str):  # одобрение и автоматическая публикация КТ
     user = User.query.filter_by(user_id=userid).first()
     email = user.email
 

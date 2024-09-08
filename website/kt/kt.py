@@ -7,7 +7,6 @@ from flask import session, redirect, url_for, flash
 from werkzeug.utils import secure_filename
 
 from .. import db
-from ..auth.utils_auth import login_required
 from ..kt.utils_pic import check_image_validity, check_images_validity, remove_files_in_folder
 from ..models import Post, Image, Comments, WbPost, AdminComments
 from ..settings import UPLOAD_FOLDER
@@ -17,7 +16,6 @@ kt = Blueprint('kt', __name__)
 
 
 @kt.route('/post/<int:post_id>', methods=['GET', 'POST'])
-# @login_required
 def show_post(post_id):
     errors = []
     if 'user_id' in session:
@@ -138,8 +136,7 @@ def show_post(post_id):
     return render_template('kt/post.html', post=post, post_id=post_id, image_urls=image_urls, comments=comments, acomments=acomments, errors=errors)
 
 
-# это функция заметь !
-def add_post(title, content, user_id, post_status):
+def add_post(title, content, user_id, post_status):  # это функция заметь !
     errors = []
     new_post = Post(title=title, content=content, user_id=user_id, post_status=post_status)
     db.session.add(new_post)
@@ -218,7 +215,6 @@ def add_post(title, content, user_id, post_status):
 
 
 @kt.route('/create_post', methods=['GET', 'POST'])
-# @login_required
 def create_post():
     if request.method == 'GET':
         if 'user_id' in session:
@@ -247,11 +243,9 @@ def create_post():
 
 # Маршрут для обработки отправленного комментария
 @kt.route('/add_comment', methods=['POST'])
-# @login_required
 def add_comment():
     if 'user_id' in session:
         user_id = session.get('user_id')
-
     comment_content = request.form.get('comment_text')
     post_id = request.form.get('post_id')  # Получаем post_id из формы
     user_id = session.get('user_id')

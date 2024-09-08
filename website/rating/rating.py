@@ -5,11 +5,12 @@ from flask import render_template, session
 
 from ..models import Rating, Balance, UserBalance
 from ..rating.utils_rating import get_all_sales_user_per_day, plot_user_balance
+from ..settings import USER_ROYALTY
 
 rating = Blueprint('rating', __name__)
 
 
-# добавить срабатывание по таймеру каждую неделю в 00-00 для записи в таблицу Rating
+# ! добавить срабатывание по таймеру каждую неделю в 00-00 для записи в таблицу Rating
 @rating.route('/rating', methods=['GET'])
 def get_rating():
     current_user_id = session.get('user_id')
@@ -26,7 +27,10 @@ def get_rating():
     yesterday_date = current_date.date() - datetime.timedelta(days=1)
     formatted_yesterday_date = yesterday_date.strftime('%Y-%m-%d')
     day_balance_for_user = get_all_sales_user_per_day(selected_articles_for_user, formatted_yesterday_date)
-    Balance.create_balance(day_balance_for_user, current_user_id)  # записали баланс вчерашнего дня для автора
+
+    day_balance_for_user_royalty = day_balance_for_user * USER_ROYALTY  # 0.05 процент вознаграждения от валовой прибыли
+
+    Balance.create_balance(day_balance_for_user_royalty, current_user_id)  # записали баланс вчерашнего дня для автора
 
     # временно вставил - запись суммы по дням и отображение суммы по дням для вывода с холдом - в таблицу UserBalance
     UserBalance.update_user_balance(current_user_id)

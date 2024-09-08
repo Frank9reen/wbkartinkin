@@ -1,8 +1,8 @@
 import os
 
 import requests
-from ..settings import YADISK_TOKEN
 
+from ..settings import YADISK_TOKEN
 
 headers = {'Authorization': 'OAuth ' + YADISK_TOKEN}
 
@@ -12,8 +12,7 @@ def yadisk_upload_kartinka(kartinka_path):  # тут наверное лучше
         kartinka_name = os.path.basename(kartinka_path)
         response = requests.get('https://cloud-api.yandex.net/v1/disk/resources/upload',
                                 params={'path': f'kartinkin/{kartinka_name}', 'overwrite': True},
-                                headers={
-                                    'Authorization': 'OAuth ' + YADISK_TOKEN})  # вот тут путь указывается на Я.диске     # Запрос на получение URL для загрузки файла
+                                headers=headers)  # вот тут путь указывается на Я.диске     # Запрос на получение URL для загрузки файла
         upload_data = response.json()
         with open(f'{kartinka_path}', 'rb') as file:  # путь к картинке на нашем сервере - вот тут поправить надо
             response = requests.put(upload_data['href'], headers=headers, data=file)

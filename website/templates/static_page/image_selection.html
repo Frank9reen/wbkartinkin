@@ -15,11 +15,16 @@
         text-align: center;
         opacity: 0;
         transition: opacity 0.3s;
+        border-radius: 8px; /* Скругление углов для оверлея */
     }
     .image-container {
         position: relative;
         display: inline-block;
         margin: 10px;
+    }
+    .image-container img {
+        border-radius: 8px; /* Скругление углов для изображения */
+        display: block; /* Убирает пробелы под картинкой */
     }
     .image-container:hover .overlay {
         opacity: 1;

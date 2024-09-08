@@ -83,10 +83,24 @@ class Balance(db.Model):
             # Если запись с сегодняшней датой уже существует, возвращаем её или сообщение
             return existing_balance  # Либо можно вернуть None или сообщение о том, что запись уже существует
 
-        new_balance = cls(day_balance=day_balance, user_id=user_id)
+        new_balance = cls(day_balance=day_balance, user_id=user_id)  # с корректировкой процента роялти
         db.session.add(new_balance)
         db.session.commit()
         return new_balance
+
+    @classmethod
+    def add_50_to_balance(cls, user_id):
+        """Увеличивает day_balance на 50 для записи с сегодняшней датой."""
+        today = datetime.now().date()  # Получаем сегодняшнюю дату
+        existing_balance = cls.query.filter(and_(cls.user_id == user_id, cls.date >= today)).first()
+
+        if existing_balance:
+            existing_balance.day_balance += 50  # Увеличиваем day_balance на 50
+            db.session.commit()  # Сохраняем изменения
+            return existing_balance
+        else:
+            print("No existing balance entry found for today.")
+            return None
 
 
 class Rating(db.Model):  # данные по рейтингу за неделю, сумма КТ за все время, а деньги за неделю (!)

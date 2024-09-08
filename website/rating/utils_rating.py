@@ -39,6 +39,7 @@ def plot_user_balance(user_id):  # work / перенести в баланс и�
     if not data:
         print("Нет записей о балансе для этого пользователя.")
         return
+
     # Создаем DataFrame из полученных данных
     df = pd.DataFrame(data, columns=['date', 'day_balance'])
     df['date'] = pd.to_datetime(df['date'])  # Приводим к типу datetime
@@ -48,27 +49,18 @@ def plot_user_balance(user_id):  # work / перенести в баланс и�
     # Группируем данные по дням и подсчитываем сумму 'day_balance'
     daily_balance = df.groupby(df['date'].dt.date)['day_balance'].sum().reset_index()
 
-    # Печатаем DataFrame
-    # print(daily_balance)
-
-    # Используем Plotly для создания интерактивного графика - было раньше
-    # fig = px.line(daily_balance, x='date', y='day_balance',
-    #               title=f'Баланс по дням для {user.username}',
-    #               labels={'day_balance': 'Суммарный баланс', 'date': 'Дата'})
-
     # Создаем интерактивный график с улучшенным форматированием
     fig = make_subplots(rows=1, cols=1)
 
-    line = go.Scatter(
+    # Создаем столбчатую диаграмму
+    bar = go.Bar(
         x=daily_balance['date'],
         y=daily_balance['day_balance'],
-        mode='lines+markers',
         name='Суммарный баланс',
-        line=dict(color='royalblue', width=4),
-        marker=dict(size=10, color='red', symbol='circle')
+        marker=dict(color='royalblue')
     )
 
-    fig.add_trace(line, row=1, col=1)
+    fig.add_trace(bar, row=1, col=1)
 
     # Настройка макета графика
     fig.update_layout(
@@ -91,7 +83,8 @@ def plot_user_balance(user_id):  # work / перенести в баланс и�
         xaxis=dict(
             showgrid=True,
             gridwidth=1,
-            gridcolor='lightgray'
+            gridcolor='lightgray',
+            tickangle=-45  # Поворот подписей по оси X для удобства чтения
         ),
         yaxis=dict(
             showgrid=True,

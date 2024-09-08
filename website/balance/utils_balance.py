@@ -32,13 +32,10 @@ def plot_user_balance(user_id):
     df['date'] = pd.to_datetime(df['date'])  # Приводим к типу datetime
     # Сортируем данные по дате
     df = df.sort_values('date')
-
     # Группируем данные по дням и подсчитываем сумму 'day_balance'
     daily_balance = df.groupby(df['date'].dt.date)['day_balance'].sum().reset_index()
-
     # Печатаем DataFrame
-    print(daily_balance)
-
+    # print(daily_balance)
     # Используем Plotly для создания интерактивного графика
     fig = px.line(daily_balance, x='date', y='day_balance',
                   title=f'Баланс по дням для пользователя ID {user_id}',
