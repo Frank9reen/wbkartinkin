@@ -10,7 +10,7 @@ from ..settings import USER_ROYALTY
 rating = Blueprint('rating', __name__)
 
 
-# ! добавить срабатывание по таймеру каждую неделю в 00-00 для записи в таблицу Rating
+# !после деплоя добавить срабатывание по таймеру каждую неделю в 00-00 для записи в таблицу Rating
 @rating.route('/rating', methods=['GET'])
 def get_rating():
     current_user_id = session.get('user_id')
