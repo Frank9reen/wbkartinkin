@@ -6,6 +6,7 @@ load_dotenv(os.path.join(basedir, '.env'))
 
 SECRET_KEY = os.urandom(36)
 # SQLALCHEMY_DATABASE_URI = 'mysql://db2:*O3eJ&6wiDnc@guefoogekik.beget.app/db2'  work
+# mysql://kartinkin-db:tBRhWCccu%9K@mubukana.beget.app/kartinkin-db
 
 SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI')  # если мы вписываем в файл .env
 SQLALCHEMY_TRACK_MODIFICATIONS = os.environ.get('SQLALCHEMY_TRACK_MODIFICATIONS')  # добавил
