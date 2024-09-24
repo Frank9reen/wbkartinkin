@@ -76,7 +76,7 @@ def rating_user(user_id):
 
 
 @views.route('/admin', methods=['GET'])  # работа с админкой
-# @login_required
+@login_required
 def admin():
     if 'user_id' in session:
         user_id = session.get('user_id')
