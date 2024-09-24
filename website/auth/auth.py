@@ -12,6 +12,10 @@ from ..models import User, Rating
 
 auth = Blueprint('auth', __name__)
 
+# Настройка логирования
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 @auth.route('/registration', methods=['POST', 'GET'])
 def add_record():
@@ -42,7 +46,8 @@ def add_record():
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
-    if 'user_id' in session:  # Проверяем наличие пользователя в сессии
+    if 'user_id' in session:
+        logger.info(f"Пользователь {session['username']} уже залогинен, перенаправление на админку.")
         return redirect(url_for('views.admin'))
 
     if request.method == 'POST':
@@ -50,19 +55,28 @@ def login():
         password = request.form['password']
         remember_me = request.form.get('remember_me')
         user = User.query.filter_by(email=email).first()
-        if user and bcrypt.check_password_hash(user.password, password):  # проверка пароля
-            session['user_id'] = user.user_id
-            session['username'] = user.username
-            session['user_role'] = user.user_role
 
-            if remember_me:
-                session.permanent = True  # Устанавливаем сессию как постоянную
+        if user:
+            if bcrypt.check_password_hash(user.password, password):  # Проверка пароля
+                session['user_id'] = user.user_id
+                session['username'] = user.username
+                session['user_role'] = user.user_role
 
-            if user.user_role == 'admin':
-                return redirect(url_for('views.superadmin'))  # переход в админку
+                if remember_me:
+                    session.permanent = True  # Устанавливаем сессию как постоянную
 
-            return redirect(url_for('views.admin'))  # Пользователь существует и пароль верен
+                logger.info(f"Пользователь {user.username} успешно вошел в систему.")
+
+                if user.user_role == 'admin':
+                    return redirect(url_for('views.superadmin'))  # Переход в админку
+
+                return redirect(url_for('views.admin'))  # Пользователь существует и пароль верен
+            else:
+                logger.warning(f"Пользователь {email} ввел неправильный пароль.")
+                error = 'Неправильный email или пароль. Попробуйте еще раз'
+                return render_template('auth/login.html', error=error)
         else:
+            logger.warning(f"Пользователь с email {email} не найден.")
             error = 'Неправильный email или пароль. Попробуйте еще раз'
             return render_template('auth/login.html', error=error)
     else:

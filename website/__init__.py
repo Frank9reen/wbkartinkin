@@ -20,19 +20,14 @@ def create_app():
     logging.basicConfig(level=logging.INFO)
     logger = logging.getLogger('sqlalchemy.engine')
     logger.setLevel(logging.INFO)
-
     # Создаем обработчик для вывода логов в консоль
     handler = StreamHandler()
     handler.setLevel(logging.INFO)
-
     # Создаём формат логов
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     handler.setFormatter(formatter)
-
     # Добавляем обработчик в логгер приложения
     app.logger.addHandler(handler)
-
-
 
     db.init_app(app)
     migrate.init_app(app, db, render_as_batch=True)  # сделано у техервова м.
@@ -59,7 +54,5 @@ def create_app():
     app.register_blueprint(message)
     app.register_blueprint(payouts)
     app.register_blueprint(rating)
-
-    app.logger.info('Flask приложение успешно создано')
 
     return app
