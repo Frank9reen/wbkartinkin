@@ -3,7 +3,8 @@ from flask_bcrypt import Bcrypt
 from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-
+import logging
+from logging import StreamHandler
 
 db = SQLAlchemy()
 bcrypt = Bcrypt()
@@ -14,6 +15,20 @@ migrate = Migrate()
 def create_app():
     app = Flask(__name__)
     app.config.from_pyfile('settings.py')
+
+    # Настройка уровня логирования
+    logging.basicConfig(level=logging.INFO)
+
+    # Создаем обработчик для вывода логов в консоль
+    handler = StreamHandler()
+    handler.setLevel(logging.INFO)
+
+    # Создаём формат логов
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    handler.setFormatter(formatter)
+
+    # Добавляем обработчик в логгер приложения
+    app.logger.addHandler(handler)
 
     db.init_app(app)
     migrate.init_app(app, db, render_as_batch=True)  # сделано у техервова м.
@@ -40,5 +55,7 @@ def create_app():
     app.register_blueprint(message)
     app.register_blueprint(payouts)
     app.register_blueprint(rating)
+
+    app.logger.info('Flask приложение успешно создано')
 
     return app
