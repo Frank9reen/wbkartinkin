@@ -18,6 +18,8 @@ def create_app():
 
     # Настройка уровня логирования
     logging.basicConfig(level=logging.INFO)
+    logger = logging.getLogger('sqlalchemy.engine')
+    logger.setLevel(logging.INFO)
 
     # Создаем обработчик для вывода логов в консоль
     handler = StreamHandler()
@@ -29,6 +31,8 @@ def create_app():
 
     # Добавляем обработчик в логгер приложения
     app.logger.addHandler(handler)
+
+
 
     db.init_app(app)
     migrate.init_app(app, db, render_as_batch=True)  # сделано у техервова м.
